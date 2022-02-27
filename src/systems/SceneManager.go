@@ -18,6 +18,7 @@ func NewSceneManager() *SceneManager {
 func (s *SceneManager) setScene() {
 	l := len(s.allScenese)
 	s.CurrentScene = s.allScenese[l-1]
+	s.CurrentScene.Init()
 }
 
 func (s *SceneManager) Push(v interfaces.IScene) {

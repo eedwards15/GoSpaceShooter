@@ -4,6 +4,11 @@ import (
 	"SpaceShooter/src/scenes"
 	"SpaceShooter/src/systems"
 	"github.com/hajimehoshi/ebiten/v2"
+	"time"
+)
+
+var (
+	prevUpdateTime = time.Now()
 )
 
 type Game struct {
@@ -11,7 +16,7 @@ type Game struct {
 }
 
 func (gameClass *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 1280, 800
+	return systems.WINDOWMANAGER.SCREENWIDTH, systems.WINDOWMANAGER.SCREENHEIGHT
 }
 
 func NewGame() *Game {

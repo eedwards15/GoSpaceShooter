@@ -9,6 +9,11 @@ import (
 
 func main() {
 	systems.SCENEMANAGER = systems.NewSceneManager()
+	systems.WINDOWMANAGER = systems.WindowManager{
+		SCREENHEIGHT: 800,
+		SCREENWIDTH:  1280,
+	}
+
 	game := src.NewGame()
 	ebiten.SetWindowResizable(true)
 	ebiten.SetWindowTitle("Space Shooter")
