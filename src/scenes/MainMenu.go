@@ -2,6 +2,7 @@ package scenes
 
 import (
 	"SpaceShooter/src/helpers"
+	"SpaceShooter/src/systems"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -63,7 +64,7 @@ func (mainMenuClass *MainMenu) Update() error {
 		_, ok := keyboard.KeyRect(p)
 
 		if p.String() == "Enter" {
-			//mainMenuClass.sceneManager.SceneManager.Push(NewLevelOne())
+			systems.SCENEMANAGER.Push(NewLevelOne())
 		}
 
 		if !ok {

@@ -7,8 +7,7 @@ import (
 )
 
 type Game struct {
-	SceneManager *systems.SceneManager
-	keys         []ebiten.Key
+	keys []ebiten.Key
 }
 
 func (gameClass *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -22,16 +21,15 @@ func NewGame() *Game {
 }
 
 func (gameClass *Game) init() {
-	gameClass.SceneManager = systems.NewSceneManager()
-	gameClass.SceneManager.Push(scenes.NewMainMenu())
-	gameClass.SceneManager.CurrentScene.Init()
+	systems.SCENEMANAGER.Push(scenes.NewMainMenu())
+	systems.SCENEMANAGER.CurrentScene.Init()
 }
 
 func (gameClass *Game) Update() error {
-	gameClass.SceneManager.CurrentScene.Update()
+	systems.SCENEMANAGER.CurrentScene.Update()
 	return nil
 }
 
 func (gameClass *Game) Draw(screen *ebiten.Image) {
-	gameClass.SceneManager.CurrentScene.Draw(screen)
+	systems.SCENEMANAGER.CurrentScene.Draw(screen)
 }

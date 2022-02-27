@@ -1,9 +1,11 @@
 package scenes
 
 import (
+	"SpaceShooter/src/systems"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"image/color"
 )
 
@@ -12,7 +14,6 @@ type LevelOne struct {
 }
 
 func (levelOneClass *LevelOne) Init() {
-	//levelOneClass.sceneManager = sceneManager
 	fmt.Println("Level 1")
 }
 
@@ -30,11 +31,12 @@ func (levelOneClass *LevelOne) Draw(screen *ebiten.Image) {
 }
 
 func (levelOneClass *LevelOne) Update() error {
+	levelOneClass.keys = inpututil.AppendPressedKeys(levelOneClass.keys[:0])
 	for _, p := range levelOneClass.keys {
 		_, ok := keyboard.KeyRect(p)
 
 		if p.String() == "Escape" {
-			//levelOneClass.sceneManager.SceneManager.Pop()
+			systems.SCENEMANAGER.Pop()
 		}
 
 		if !ok {

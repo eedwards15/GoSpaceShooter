@@ -2,6 +2,8 @@ package systems
 
 import "SpaceShooter/src/interfaces"
 
+var SCENEMANAGER *SceneManager
+
 type SceneManager struct {
 	allScenese   []interfaces.IScene
 	CurrentScene interfaces.IScene
