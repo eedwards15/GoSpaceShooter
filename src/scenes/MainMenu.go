@@ -3,6 +3,8 @@ package scenes
 import (
 	"SpaceShooter/src/helpers"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
@@ -13,6 +15,7 @@ import (
 type MainMenu struct {
 	titleArcadeFont font.Face
 	Testing         string
+	keys            []ebiten.Key
 }
 
 func (mainMenuClass *MainMenu) GetName() string {
@@ -28,12 +31,11 @@ const (
 
 func NewMainMenu() *MainMenu {
 	g := &MainMenu{}
-	g.Init()
 	return g
 }
 
 func (mainMenuClass *MainMenu) Init() {
-	mainMenuClass.Testing = "Testing My Value"
+
 	tt, err := opentype.Parse(*helpers.LoadFile("./assets/fonts/arcades/Arcades.ttf"))
 	if err != nil {
 		log.Fatal(err)
@@ -55,5 +57,20 @@ func (mainMenuClass *MainMenu) Draw(screen *ebiten.Image) {
 }
 
 func (mainMenuClass *MainMenu) Update() error {
+	mainMenuClass.keys = inpututil.AppendPressedKeys(mainMenuClass.keys[:0])
+
+	for _, p := range mainMenuClass.keys {
+		_, ok := keyboard.KeyRect(p)
+
+		if p.String() == "Enter" {
+			//mainMenuClass.sceneManager.SceneManager.Push(NewLevelOne())
+		}
+
+		if !ok {
+			continue
+		}
+
+	}
+
 	return nil
 }
