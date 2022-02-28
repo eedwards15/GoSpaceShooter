@@ -4,11 +4,6 @@ import (
 	"SpaceShooter/src/scenes"
 	"SpaceShooter/src/systems"
 	"github.com/hajimehoshi/ebiten/v2"
-	"time"
-)
-
-var (
-	prevUpdateTime = time.Now()
 )
 
 type Game struct {
@@ -27,7 +22,6 @@ func NewGame() *Game {
 
 func (gameClass *Game) init() {
 	systems.SCENEMANAGER.Push(scenes.NewMainMenu())
-	systems.SCENEMANAGER.CurrentScene.Init()
 }
 
 func (gameClass *Game) Update() error {

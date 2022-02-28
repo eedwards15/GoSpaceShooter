@@ -13,13 +13,11 @@ import (
 )
 
 type LevelOne struct {
-	keys   []ebiten.Key
-	player *player.Player
+	keys []ebiten.Key
 }
 
 func (levelOneClass *LevelOne) Init() {
-	levelOneClass.player = player.NewPLayer()
-	levelOneClass.player.Ship.SelectShip(1, 2)
+	player.PLAYER.Ship.SelectShip(1, 2)
 }
 
 func (levelOneClass *LevelOne) GetName() string {
@@ -34,8 +32,8 @@ func NewLevelOne() *LevelOne {
 func (levelOneClass *LevelOne) Draw(screen *ebiten.Image) {
 	screen.Fill(color.NRGBA{0x00, 0x40, 0x80, 0xff})
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(levelOneClass.player.XPos, levelOneClass.player.YPos)
-	screen.DrawImage(levelOneClass.player.Ship.CurrentShipImage, op)
+	op.GeoM.Translate(player.PLAYER.XPos, player.PLAYER.YPos)
+	screen.DrawImage(player.PLAYER.Ship.CurrentShipImage, op)
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
 }
@@ -46,19 +44,19 @@ func (levelOneClass *LevelOne) Update() error {
 		_, ok := keyboard.KeyRect(p)
 
 		if p.String() == "A" {
-			levelOneClass.player.XPos -= 15.0
+			player.PLAYER.XPos -= 15.0
 		}
 
 		if p.String() == "D" {
-			levelOneClass.player.XPos += 15
+			player.PLAYER.XPos += 15
 		}
 
 		if p.String() == "W" {
-			levelOneClass.player.YPos -= 15
+			player.PLAYER.YPos -= 15
 		}
 
 		if p.String() == "S" {
-			levelOneClass.player.YPos += 15
+			player.PLAYER.YPos += 15
 		}
 
 		if p.String() == "Escape" {

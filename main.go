@@ -2,6 +2,7 @@ package main
 
 import (
 	"SpaceShooter/src"
+	"SpaceShooter/src/player"
 	"SpaceShooter/src/systems"
 	"github.com/hajimehoshi/ebiten/v2"
 	"log"
@@ -9,10 +10,8 @@ import (
 
 func main() {
 	systems.SCENEMANAGER = systems.NewSceneManager()
-	systems.WINDOWMANAGER = systems.WindowManager{
-		SCREENHEIGHT: 800,
-		SCREENWIDTH:  1280,
-	}
+	systems.WINDOWMANAGER = systems.WindowManager{SCREENHEIGHT: 800, SCREENWIDTH: 1280}
+	player.NewPLayer()
 
 	game := src.NewGame()
 	ebiten.SetWindowResizable(true)
