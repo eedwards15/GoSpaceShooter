@@ -8,16 +8,18 @@ import (
 )
 
 type Ship struct {
-	tileWidth        int
-	tileHeight       int
-	row              int
-	col              int
-	ShipTileSheets   *ebiten.Image
-	minX             int
-	maxX             int
-	minY             int
-	maxY             int
-	CurrentShipImage *ebiten.Image
+	tileWidth         int
+	tileHeight        int
+	row               int
+	col               int
+	ShipTileSheets    *ebiten.Image
+	minX              int
+	maxX              int
+	minY              int
+	maxY              int
+	CurrentShipImage  *ebiten.Image
+	CurrentShipWidth  float64
+	CurrentShipHeight float64
 }
 
 func NewShip() *Ship {
@@ -43,5 +45,9 @@ func (ship *Ship) SelectShip(row int, col int) {
 	ship.maxX = (ship.col) * ship.tileWidth
 	ship.minY = (ship.row - 1) * ship.tileHeight
 	ship.maxY = (ship.row) * ship.tileHeight
+
 	ship.CurrentShipImage = ship.ShipTileSheets.SubImage(image.Rect(ship.minX, ship.minY, ship.maxX, ship.maxY)).(*ebiten.Image)
+	width, height := ship.CurrentShipImage.Size()
+	ship.CurrentShipWidth = float64(width)
+	ship.CurrentShipHeight = float64(height)
 }
