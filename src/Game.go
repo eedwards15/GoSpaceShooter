@@ -21,6 +21,7 @@ func NewGame() *Game {
 }
 
 func (gameClass *Game) init() {
+	systems.MUSICSYSTEM.PlaySong()
 	systems.SCENEMANAGER.Push(scenes.NewMainMenu())
 }
 

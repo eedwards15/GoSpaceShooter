@@ -11,6 +11,7 @@ import (
 func main() {
 	systems.SCENEMANAGER = systems.NewSceneManager()
 	systems.WINDOWMANAGER = systems.WindowManager{SCREENHEIGHT: 800, SCREENWIDTH: 1280}
+	systems.MUSICSYSTEM = systems.NewMusicSystem("assets/music/545452__bertsz__organ-type-hiphop-beat.mp3", 44100)
 	player.NewPLayer()
 
 	game := src.NewGame()

@@ -21,6 +21,8 @@ type Level struct {
 }
 
 func (levelOneClass *Level) Init() {
+	systems.MUSICSYSTEM.LoadSong("assets/music/416984__soundflakes__desolated-field.mp3", 44100)
+	systems.MUSICSYSTEM.PlaySong()
 	player.PLAYER.Ship.SelectShip(1, 2)
 
 	levelOneClass.enemy = npcs.NewEnemy()
