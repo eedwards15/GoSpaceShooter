@@ -1,6 +1,7 @@
 package scenes
 
 import (
+	"SpaceShooter/src/npcs"
 	"SpaceShooter/src/player"
 	"SpaceShooter/src/systems"
 	"fmt"
@@ -15,11 +16,14 @@ import (
 //Convert this into something that loads the levels.
 
 type Level struct {
-	keys []ebiten.Key
+	keys  []ebiten.Key
+	enemy *npcs.Enemy
 }
 
 func (levelOneClass *Level) Init() {
 	player.PLAYER.Ship.SelectShip(1, 2)
+
+	levelOneClass.enemy = npcs.NewEnemy()
 
 }
 
@@ -34,10 +38,16 @@ func NewLevelOne() *Level {
 
 func (levelOneClass *Level) Draw(screen *ebiten.Image) {
 	screen.Fill(color.NRGBA{0x00, 0x40, 0x80, 0xff})
+
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(player.PLAYER.XPos, player.PLAYER.YPos)
 	op.Filter = ebiten.FilterLinear
+	op.GeoM.Translate(player.PLAYER.XPos, player.PLAYER.YPos)
 	screen.DrawImage(player.PLAYER.Ship.CurrentShipImage, op)
+
+	op2 := &ebiten.DrawImageOptions{}
+	op2.Filter = ebiten.FilterLinear
+	op2.GeoM.Translate(levelOneClass.enemy.PosX, levelOneClass.enemy.PosY)
+	screen.DrawImage(levelOneClass.enemy.Image, op2)
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
 }
