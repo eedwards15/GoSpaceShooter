@@ -6,18 +6,23 @@ import (
 	"SpaceShooter/src/systems"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"image/color"
 	_ "image/png"
+	"time"
 )
 
 //Convert this into something that loads the levels.
 
 type Level struct {
-	keys  []ebiten.Key
-	enemy *npcs.Enemy
+	keys              []ebiten.Key
+	enemy             *npcs.Enemy
+	soundEffectPlayer *audio.Player
+	eB                []byte
+	time              time.Time
 }
 
 func (levelOneClass *Level) Init() {
@@ -28,6 +33,8 @@ func (levelOneClass *Level) Init() {
 	cX, cY := systems.WINDOWMANAGER.Center()
 	player.PLAYER.XPos = cX
 	player.PLAYER.YPos = cY
+
+	levelOneClass.soundEffectPlayer, _ = audio.CurrentContext().NewPlayer(player.PLAYER.Ship.FireSound)
 
 }
 
@@ -76,6 +83,15 @@ func (levelOneClass *Level) Update() error {
 
 		if p.String() == "S" && ((player.PLAYER.YPos + player.PLAYER.Ship.CurrentShipHeight) < float64(systems.WINDOWMANAGER.SCREENHEIGHT)) {
 			player.PLAYER.YPos += 10
+		}
+
+		if p.String() == "Space" && !levelOneClass.soundEffectPlayer.IsPlaying() {
+			systems.MUSICSYSTEM.SetVolume(.50)
+			fmt.Println("Hitting")
+			levelOneClass.soundEffectPlayer.SetVolume(1)
+			levelOneClass.soundEffectPlayer.Rewind()
+			levelOneClass.soundEffectPlayer.Play()
+
 		}
 
 		if p.String() == "Escape" {

@@ -54,3 +54,7 @@ func (musicSystem *MusicSystem) Pause() {
 func (musicSystem *MusicSystem) Rewind() {
 	musicSystem.player.Rewind()
 }
+
+func (musicSystem *MusicSystem) SetVolume(vol float64) {
+	musicSystem.player.SetVolume(vol)
+}

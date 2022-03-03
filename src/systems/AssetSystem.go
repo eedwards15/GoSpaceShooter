@@ -6,6 +6,7 @@ var (
 	ASSETSYSTEM *AssetSystem
 )
 
+//Make This Load From Config Files
 type AssetSystem struct {
 	MainMenu definitions.LevelDefinition
 	LevelOne definitions.LevelDefinition

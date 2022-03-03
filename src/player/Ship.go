@@ -2,6 +2,7 @@ package player
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"image"
 	"log"
@@ -20,6 +21,7 @@ type Ship struct {
 	CurrentShipImage  *ebiten.Image
 	CurrentShipWidth  float64
 	CurrentShipHeight float64
+	FireSound         *mp3.Stream
 }
 
 func NewShip() *Ship {
@@ -27,6 +29,11 @@ func NewShip() *Ship {
 	ship.tileWidth = 98
 	ship.tileHeight = 75
 	ship.LoadImages()
+
+	//Move this
+	f, _ := ebitenutil.OpenFile("assets/sound effects/414885__matrixxx__retro-laser-shot-03.mp3")
+	ship.FireSound, _ = mp3.DecodeWithSampleRate(44100, f)
+
 	return ship
 }
 

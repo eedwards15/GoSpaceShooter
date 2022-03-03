@@ -22,6 +22,3 @@ func main() {
 		log.Fatal(err)
 	}
 }
-func GetSceneManager() *systems.SceneManager {
-	return systems.NewSceneManager()
-}
