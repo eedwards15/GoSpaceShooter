@@ -14,13 +14,18 @@ type AssetSystem struct {
 
 func NewAssetSystem() *AssetSystem {
 	assetsystem := AssetSystem{}
-	assetsystem.LevelOne.BackgroundMusic = definitions.BackgroundMusic{
-		Path:       "assets/music/416984__soundflakes__desolated-field.mp3",
-		SampleRate: 44100,
-	}
+	assetsystem.MainMenu = *definitions.NewLevelDefinition()
 	assetsystem.MainMenu.BackgroundMusic = definitions.BackgroundMusic{
 		Path:       "assets/music/545452__bertsz__organ-type-hiphop-beat.mp3",
 		SampleRate: 44100,
 	}
+
+	assetsystem.LevelOne = *definitions.NewLevelDefinition()
+	assetsystem.LevelOne.BackgroundMusic = definitions.BackgroundMusic{
+		Path:       "assets/music/416984__soundflakes__desolated-field.mp3",
+		SampleRate: 44100,
+	}
+	assetsystem.LevelOne.AddImage("Background", "assets/art/scene/Space-Background-Tiled.png")
+
 	return &assetsystem
 }

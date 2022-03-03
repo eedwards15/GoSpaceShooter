@@ -50,6 +50,10 @@ func NewLevelOne() *Level {
 func (levelOneClass *Level) Draw(screen *ebiten.Image) {
 	screen.Fill(color.NRGBA{0x00, 0x40, 0x80, 0xff})
 
+	backgroundOP := &ebiten.DrawImageOptions{}
+	backgroundOP.GeoM.Scale(2, 2)
+	screen.DrawImage(systems.ASSETSYSTEM.LevelOne.Images["Background"], backgroundOP)
+
 	op := &ebiten.DrawImageOptions{}
 	op.Filter = ebiten.FilterLinear
 	op.GeoM.Translate(player.PLAYER.XPos, player.PLAYER.YPos)
@@ -87,7 +91,6 @@ func (levelOneClass *Level) Update() error {
 
 		if p.String() == "Space" && !levelOneClass.soundEffectPlayer.IsPlaying() {
 			systems.MUSICSYSTEM.SetVolume(.50)
-			fmt.Println("Hitting")
 			levelOneClass.soundEffectPlayer.SetVolume(1)
 			levelOneClass.soundEffectPlayer.Rewind()
 			levelOneClass.soundEffectPlayer.Play()
