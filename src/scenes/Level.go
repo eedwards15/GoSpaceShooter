@@ -21,11 +21,13 @@ type Level struct {
 }
 
 func (levelOneClass *Level) Init() {
-	systems.MUSICSYSTEM.LoadSong("assets/music/416984__soundflakes__desolated-field.mp3", 44100)
-	systems.MUSICSYSTEM.PlaySong()
+	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.LevelOne.BackgroundMusic).PlaySong()
 	player.PLAYER.Ship.SelectShip(1, 2)
-
 	levelOneClass.enemy = npcs.NewEnemy()
+
+	cX, cY := systems.WINDOWMANAGER.Center()
+	player.PLAYER.XPos = cX
+	player.PLAYER.YPos = cY
 
 }
 

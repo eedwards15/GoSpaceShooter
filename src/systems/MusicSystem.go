@@ -1,6 +1,7 @@
 package systems
 
 import (
+	"SpaceShooter/src/definitions"
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -16,19 +17,20 @@ type MusicSystem struct {
 	player      *audio.Player
 }
 
-func NewMusicSystem(songLocation string, sampleRate int) *MusicSystem {
+func NewMusicSystem(music definitions.BackgroundMusic) *MusicSystem {
 	musicSystem := MusicSystem{}
-	musicSystem.sampleRate = sampleRate
-	f, _ := ebitenutil.OpenFile(songLocation)
-	musicSystem.currentSong, _ = mp3.DecodeWithSampleRate(sampleRate, f)
+	musicSystem.sampleRate = music.SampleRate
+	f, _ := ebitenutil.OpenFile(music.Path)
+	musicSystem.currentSong, _ = mp3.DecodeWithSampleRate(music.SampleRate, f)
 	return &musicSystem
 }
 
-func (musicSystem *MusicSystem) LoadSong(songLocation string, sampleRate int) {
+func (musicSystem *MusicSystem) LoadSong(music definitions.BackgroundMusic) *MusicSystem {
 	musicSystem.player.Close()
-	musicSystem.sampleRate = sampleRate
-	f, _ := ebitenutil.OpenFile(songLocation)
-	musicSystem.currentSong, _ = mp3.DecodeWithSampleRate(sampleRate, f)
+	musicSystem.sampleRate = music.SampleRate
+	f, _ := ebitenutil.OpenFile(music.Path)
+	musicSystem.currentSong, _ = mp3.DecodeWithSampleRate(music.SampleRate, f)
+	return musicSystem
 }
 
 func (musicSystem *MusicSystem) PlaySong() {
