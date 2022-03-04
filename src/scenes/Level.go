@@ -21,8 +21,7 @@ type Level struct {
 	keys              []ebiten.Key
 	enemy             *npcs.Enemy
 	soundEffectPlayer *audio.Player
-	eB                []byte
-	time              time.Time
+	lastFire          time.Time
 }
 
 func (levelOneClass *Level) Init() {
@@ -89,7 +88,8 @@ func (levelOneClass *Level) Update() error {
 			player.PLAYER.YPos += 10
 		}
 
-		if p.String() == "Space" && !levelOneClass.soundEffectPlayer.IsPlaying() {
+		if p.String() == "Space" && !levelOneClass.soundEffectPlayer.IsPlaying() && (time.Now().Sub(levelOneClass.lastFire).Milliseconds() > player.PLAYER.Ship.FireRate) {
+			levelOneClass.lastFire = time.Now()
 			systems.MUSICSYSTEM.SetVolume(.50)
 			levelOneClass.soundEffectPlayer.SetVolume(1)
 			levelOneClass.soundEffectPlayer.Rewind()
