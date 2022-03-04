@@ -1,0 +1,7 @@
+{
+  "Scene": "MainMenu",
+  "BackgroundMusic": {
+    "Path": "assets/music/545452__bertsz__organ-type-hiphop-beat.mp3",
+    "SampleRate": 44100
+  }
+}

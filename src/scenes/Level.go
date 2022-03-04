@@ -28,11 +28,11 @@ type Level struct {
 }
 
 var (
-	ckX, bky int
+	SCENENAME = "Level 1"
 )
 
 func (levelOneClass *Level) Init() {
-	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.LevelOne.BackgroundMusic).PlaySong()
+	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[SCENENAME].BackgroundMusic).PlaySong()
 	player.PLAYER.Ship.SelectShip(1, 2)
 	levelOneClass.enemies = append(levelOneClass.enemies, npcs.NewEnemy())
 
@@ -58,7 +58,7 @@ func (levelOneClass *Level) Draw(screen *ebiten.Image) {
 
 	backgroundOP := &ebiten.DrawImageOptions{}
 	backgroundOP.GeoM.Scale(2, 2)
-	screen.DrawImage(systems.ASSETSYSTEM.LevelOne.Images["Background"], backgroundOP)
+	screen.DrawImage(systems.ASSETSYSTEM.Assets[SCENENAME].Images["Background"], backgroundOP)
 
 	for i := 0; i < len(levelOneClass.playerBullets); i++ {
 		op := &ebiten.DrawImageOptions{}
@@ -126,7 +126,7 @@ func (levelOneClass *Level) Update() error {
 
 		if p.String() == "Space" && !levelOneClass.soundEffectPlayer.IsPlaying() && (time.Now().Sub(levelOneClass.lastFire).Milliseconds() > player.PLAYER.Ship.FireRate) {
 
-			bullet := weapons.NewBullet(systems.ASSETSYSTEM.LevelOne.Images["LaserBullet"])
+			bullet := weapons.NewBullet(systems.ASSETSYSTEM.Assets[SCENENAME].Images["LaserBullet"])
 			bullet = bullet.SetCoordinates(player.PLAYER.XPos+(player.PLAYER.Ship.CurrentShipWidth/2)-(bullet.Width/2), player.PLAYER.YPos)
 			levelOneClass.playerBullets = append(levelOneClass.playerBullets, bullet)
 			levelOneClass.lastFire = time.Now()

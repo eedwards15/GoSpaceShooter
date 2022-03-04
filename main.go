@@ -12,7 +12,7 @@ func main() {
 	systems.SCENEMANAGER = systems.NewSceneManager()
 	systems.WINDOWMANAGER = systems.NewWindowManager(1280, 800)
 	systems.ASSETSYSTEM = systems.NewAssetSystem()
-	systems.MUSICSYSTEM = systems.NewMusicSystem(systems.ASSETSYSTEM.MainMenu.BackgroundMusic)
+	systems.MUSICSYSTEM = systems.NewMusicSystem(systems.ASSETSYSTEM.Assets["MainMenu"].BackgroundMusic)
 	player.NewPLayer()
 
 	game := src.NewGame()
