@@ -26,6 +26,7 @@ func NewAssetSystem() *AssetSystem {
 		SampleRate: 44100,
 	}
 	assetsystem.LevelOne.AddImage("Background", "assets/art/scene/Space-Background-Tiled.png")
+	assetsystem.LevelOne.AddImage("LaserBullet", "assets/art/weapons/laser_bullet.png")
 
 	return &assetsystem
 }
