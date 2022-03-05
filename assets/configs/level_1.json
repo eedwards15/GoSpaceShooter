@@ -1,0 +1,19 @@
+{
+  "Scene": "Level 1",
+  "BackgroundMusic": {
+    "Path": "assets/music/416984__soundflakes__desolated-field.mp3",
+    "SampleRate": 44100
+  },
+  "Images": [
+    {
+      "Key" : "Background",
+      "location": "art/scene/",
+      "FileName": "Space-Background-Tiled.png"
+    },
+    {
+      "Key" : "LaserBullet",
+      "location": "art/weapons/",
+      "FileName": "laser_bullet.png"
+    }
+  ]
+}

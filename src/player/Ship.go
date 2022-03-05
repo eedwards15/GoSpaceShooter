@@ -22,6 +22,7 @@ type Ship struct {
 	CurrentShipWidth  float64
 	CurrentShipHeight float64
 	FireSound         *mp3.Stream
+	FireRate          int64
 }
 
 func NewShip() *Ship {
@@ -29,7 +30,7 @@ func NewShip() *Ship {
 	ship.tileWidth = 98
 	ship.tileHeight = 75
 	ship.LoadImages()
-
+	ship.FireRate = 350
 	//Move this
 	f, _ := ebitenutil.OpenFile("assets/sound effects/414885__matrixxx__retro-laser-shot-03.mp3")
 	ship.FireSound, _ = mp3.DecodeWithSampleRate(44100, f)
