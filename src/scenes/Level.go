@@ -12,8 +12,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"image/color"
 	_ "image/png"
+	"math/rand"
 	"time"
 )
 
@@ -28,23 +28,19 @@ type Level struct {
 }
 
 var (
-	SCENENAME    = "Level 1"
-	GOBAL_ASSETS = "Global"
-	PLAYER       = &player.Player{}
+	SCENENAME       = "Level 1"
+	GOBAL_ASSETS    = "Global"
+	LAST_SPAWN_TIME = time.Now()
+	PLAYER          = &player.Player{}
 )
 
 func (levelClass *Level) Init() {
-	PLAYER = player.NewPLayer()
+	systems.MUSICSYSTEM.SetVolume(.50)
 	cX, cY := systems.WINDOWMANAGER.Center()
-
+	PLAYER = player.NewPLayer(cX, cY)
 	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[SCENENAME].BackgroundMusic).PlaySong()
 	PLAYER.Ship.SelectShip(1, 2)
-
-	levelClass.enemies = append(levelClass.enemies, npcs.NewEnemy())
-
-	PLAYER.XPos = cX
-	PLAYER.YPos = cY
-
+	levelClass.enemies = append(levelClass.enemies, npcs.NewEnemy(float64(systems.WINDOWMANAGER.SCREENWIDTH/2), 0))
 	levelClass.soundEffectPlayer, _ = audio.CurrentContext().NewPlayer(PLAYER.Ship.FireSound)
 
 }
@@ -59,30 +55,23 @@ func NewLevel() *Level {
 }
 
 func (levelClass *Level) Draw(screen *ebiten.Image) {
-	screen.Fill(color.NRGBA{0x00, 0x40, 0x80, 0xff})
-
 	backgroundOP := &ebiten.DrawImageOptions{}
 	backgroundOP.GeoM.Scale(2, 2)
 	screen.DrawImage(systems.ASSETSYSTEM.Assets[SCENENAME].Images["Background"], backgroundOP)
 
 	for i := 0; i < len(levelClass.playerBullets); i++ {
 		op := &ebiten.DrawImageOptions{}
-		op.Filter = ebiten.FilterLinear
 		op.GeoM.Translate(levelClass.playerBullets[i].Xpos, levelClass.playerBullets[i].Ypos)
 		screen.DrawImage(levelClass.playerBullets[i].Sprite, op)
 	}
 
-	op := &ebiten.DrawImageOptions{}
-	op.Filter = ebiten.FilterLinear
-	op.GeoM.Translate(PLAYER.XPos, PLAYER.YPos)
-	screen.DrawImage(PLAYER.Ship.CurrentShipImage, op)
-
 	for e := 0; e < len(levelClass.enemies); e++ {
 		op := &ebiten.DrawImageOptions{}
-		op.Filter = ebiten.FilterLinear
 		op.GeoM.Translate(levelClass.enemies[e].PosX, levelClass.enemies[e].PosY)
 		screen.DrawImage(levelClass.enemies[e].Image, op)
 	}
+
+	PLAYER.Draw(screen)
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
 }
@@ -91,21 +80,56 @@ func RemoveIndex(s []*weapons.Bullet, index int) []*weapons.Bullet {
 }
 
 func (levelClass *Level) Update() error {
+
 	for i := 0; i < len(levelClass.playerBullets); i++ {
 		levelClass.playerBullets[i].Ypos -= 10
 
+		removeBullet := false
+		//Enemy Loop
 		for e := 0; e < len(levelClass.enemies); e++ {
-
-			if levelClass.enemies != nil && helpers.DistanceBetween(levelClass.enemies[e].PosX, levelClass.enemies[e].PosY, levelClass.playerBullets[i].Xpos, levelClass.playerBullets[i].Ypos) <= 40 {
-				levelClass.enemies = append(levelClass.enemies[:e], levelClass.enemies[e+1:]...)
-				levelClass.playerBullets = RemoveIndex(levelClass.playerBullets, i)
+			//Check to see if any bullets hit any of the enemies.
+			if levelClass.enemies != nil && helpers.DistanceBetween(levelClass.enemies[e].PosX, levelClass.enemies[e].PosY, levelClass.playerBullets[i].Xpos, levelClass.playerBullets[i].Ypos) <= 50 {
+				//levelClass.enemies = append(levelClass.enemies[:e], levelClass.enemies[e+1:]...)
+				//levelClass.playerBullets = RemoveIndex(levelClass.playerBullets, i)
+				levelClass.enemies[e].Dead = true
+				removeBullet = true
 				break
 			}
-
 		}
 
-		if len(levelClass.playerBullets) > 0 && levelClass.playerBullets[i].Ypos < 0 {
+		//Clean up dead enemies
+		newEnemyList := []*npcs.Enemy{}
+		for e := 0; e < len(levelClass.enemies); e++ {
+			if levelClass.enemies[e].Dead {
+				continue
+			}
+
+			newEnemyList = append(newEnemyList, levelClass.enemies[e])
+		}
+
+		levelClass.enemies = newEnemyList
+
+		//If Bullet Gets out of screen range remove.
+		if removeBullet == true || len(levelClass.playerBullets) > 0 && levelClass.playerBullets[i].Ypos < 0 {
 			levelClass.playerBullets = RemoveIndex(levelClass.playerBullets, i)
+		}
+	}
+
+	//Create New Enemy
+	if time.Now().Sub(LAST_SPAWN_TIME).Seconds() > 2 {
+		s1 := rand.NewSource(time.Now().UnixNano())
+		r1 := rand.New(s1)
+		x := r1.Intn(systems.WINDOWMANAGER.SCREENWIDTH - 50)
+		levelClass.enemies = append(levelClass.enemies, npcs.NewEnemy(float64(x), 0))
+		LAST_SPAWN_TIME = time.Now()
+	}
+
+	//Enemy Movement
+	for e := 0; e < len(levelClass.enemies); e++ {
+		levelClass.enemies[e].PosY += 5
+
+		if levelClass.enemies[e].PosY > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
+			levelClass.enemies[e].PosY = 0
 		}
 	}
 
@@ -114,28 +138,27 @@ func (levelClass *Level) Update() error {
 		_, ok := keyboard.KeyRect(p)
 
 		if p.String() == "A" && (PLAYER.XPos > 0) {
-			PLAYER.XPos -= 10
+			PLAYER.MoveX(-10)
 		}
 
 		if p.String() == "D" && (PLAYER.XPos+(PLAYER.Ship.CurrentShipWidth) < float64(systems.WINDOWMANAGER.SCREENWIDTH)) {
-			PLAYER.XPos += 10
+			PLAYER.MoveX(10)
 		}
 
 		if p.String() == "W" && (PLAYER.YPos > 0) {
-			PLAYER.YPos -= 10
+			PLAYER.MoveY(-10)
 		}
 
 		if p.String() == "S" && ((PLAYER.YPos + PLAYER.Ship.CurrentShipHeight) < float64(systems.WINDOWMANAGER.SCREENHEIGHT)) {
-			PLAYER.YPos += 10
+			PLAYER.MoveY(10)
 		}
 
 		if p.String() == "Space" && !levelClass.soundEffectPlayer.IsPlaying() && (time.Now().Sub(levelClass.lastFire).Milliseconds() > PLAYER.Ship.FireRate) {
-
+			//Look into Command Pattern.
 			bullet := weapons.NewBullet(systems.ASSETSYSTEM.Assets[GOBAL_ASSETS].Images["LaserBullet"])
 			bullet = bullet.SetCoordinates(PLAYER.XPos+(PLAYER.Ship.CurrentShipWidth/2)-(bullet.Width/2), PLAYER.YPos)
 			levelClass.playerBullets = append(levelClass.playerBullets, bullet)
 			levelClass.lastFire = time.Now()
-			systems.MUSICSYSTEM.SetVolume(.50)
 			levelClass.soundEffectPlayer.SetVolume(1)
 			levelClass.soundEffectPlayer.Rewind()
 			levelClass.soundEffectPlayer.Play()

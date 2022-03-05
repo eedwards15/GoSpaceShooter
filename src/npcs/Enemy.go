@@ -9,12 +9,14 @@ type Enemy struct {
 	PosX  float64
 	PosY  float64
 	Image *ebiten.Image
+	Dead  bool
 }
 
-func NewEnemy() *Enemy {
+func NewEnemy(x, y float64) *Enemy {
 	e := Enemy{}
+	e.Dead = false
 	e.Image = systems.ASSETSYSTEM.Assets["Global"].Images["WeakEnemy"]
-	e.PosX = float64(systems.WINDOWMANAGER.SCREENWIDTH / 2.0)
-	e.PosY = 0
+	e.PosX = x
+	e.PosY = y
 	return &e
 }
