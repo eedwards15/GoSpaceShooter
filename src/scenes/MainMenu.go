@@ -68,7 +68,7 @@ func (mainMenuClass *MainMenu) Update() error {
 		_, ok := keyboard.KeyRect(p)
 
 		if p.String() == "Enter" {
-			systems.SCENEMANAGER.Push(NewLevelOne())
+			systems.SCENEMANAGER.Push(NewLevel())
 		}
 
 		if !ok {

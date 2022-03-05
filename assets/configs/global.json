@@ -1,0 +1,18 @@
+{
+  "Scene": "Global",
+  "Images": [
+    {
+      "Key" : "PlayerShips",
+      "location": "art/player/",
+      "FileName": "ships.png"
+    }
+  ],
+  "Sounds": [
+    {
+      "Key" : "BasicLaserShot",
+      "location": "sound effects/",
+      "FileName": "414885__matrixxx__retro-laser-shot-03.mp3",
+      "SampleRate": 44100
+    }
+  ]
+}

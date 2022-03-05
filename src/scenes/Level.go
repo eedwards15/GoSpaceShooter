@@ -29,10 +29,11 @@ type Level struct {
 
 var (
 	SCENENAME = "Level 1"
-	PLAYER    = player.NewPLayer()
+	PLAYER    = &player.Player{}
 )
 
 func (levelClass *Level) Init() {
+	PLAYER = player.NewPLayer()
 	cX, cY := systems.WINDOWMANAGER.Center()
 
 	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[SCENENAME].BackgroundMusic).PlaySong()
@@ -51,7 +52,7 @@ func (levelClass *Level) GetName() string {
 	return "Level 1"
 }
 
-func NewLevelOne() *Level {
+func NewLevel() *Level {
 	g := &Level{}
 	return g
 }
