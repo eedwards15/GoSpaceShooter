@@ -5,9 +5,10 @@ import (
 )
 
 type Player struct {
-	Ship *Ship
-	XPos float64
-	YPos float64
+	Ship   *Ship
+	XPos   float64
+	YPos   float64
+	IsDead bool
 }
 
 func NewPLayer(x, y float64) *Player {
@@ -15,6 +16,7 @@ func NewPLayer(x, y float64) *Player {
 	PLAYER.XPos = x
 	PLAYER.YPos = y
 	PLAYER.Ship = NewShip()
+	PLAYER.IsDead = false
 	return PLAYER
 }
 

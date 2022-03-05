@@ -23,6 +23,12 @@
       "location": "sound effects/",
       "FileName": "414885__matrixxx__retro-laser-shot-03.mp3",
       "SampleRate": 44100
+    },
+    {
+      "Key" : "EnemyExplosion",
+      "location": "sound effects/",
+      "FileName": "200465__wubitog__explosion-longer.mp3",
+      "SampleRate": 44100
     }
   ]
 }

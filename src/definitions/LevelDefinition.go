@@ -61,8 +61,8 @@ func openImage(location string) *ebiten.Image {
 	return img
 }
 func openSound(location string, sampleRate int) *mp3.Stream {
+	//f, _ := ioutil.ReadFile(location)
 	f, _ := ebitenutil.OpenFile(location)
 	fireSound, _ := mp3.DecodeWithSampleRate(sampleRate, f)
 	return fireSound
-
 }

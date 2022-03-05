@@ -15,8 +15,8 @@ import (
 
 type MainMenu struct {
 	titleArcadeFont font.Face
-	Testing         string
 	keys            []ebiten.Key
+	SCENENAME       string
 }
 
 func (mainMenuClass *MainMenu) GetName() string {
@@ -38,6 +38,8 @@ func NewMainMenu() *MainMenu {
 }
 
 func (mainMenuClass *MainMenu) Init() {
+	mainMenuClass.SCENENAME = "MainMenu"
+	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[mainMenuClass.SCENENAME].BackgroundMusic).PlaySong()
 	tt, err := opentype.Parse(*helpers.LoadFile("./assets/fonts/arcades/Arcades.ttf"))
 	if err != nil {
 		log.Fatal(err)

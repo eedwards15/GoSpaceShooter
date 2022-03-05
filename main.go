@@ -11,7 +11,7 @@ func main() {
 	systems.InitAssetSystem()
 	systems.SCENEMANAGER = systems.NewSceneManager()
 	systems.WINDOWMANAGER = systems.NewWindowManager(1280, 800)
-	systems.MUSICSYSTEM = systems.NewMusicSystem(systems.ASSETSYSTEM.Assets["MainMenu"].BackgroundMusic)
+	systems.MUSICSYSTEM = systems.NewMusicSystem(systems.ASSETSYSTEM.Assets["MainMenu"].BackgroundMusic) //Refactor how this works
 
 	game := src.NewGame()
 	ebiten.SetWindowResizable(true)

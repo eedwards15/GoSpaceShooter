@@ -1,0 +1,7 @@
+{
+  "Scene": "GameOver",
+  "BackgroundMusic": {
+    "Path": "assets/music/263478__levelclearer__blizzard12.mp3",
+    "SampleRate": 44100
+  }
+}
