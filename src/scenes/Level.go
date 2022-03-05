@@ -127,9 +127,7 @@ func (levelClass *Level) Update() error {
 
 	for i := 0; i < len(levelClass.playerBullets); i++ {
 		levelClass.playerBullets[i].Ypos -= 10
-
 		removeBullet := false
-		//Enemy Loop
 
 		//EnemyExplosion
 		for e := 0; e < len(levelClass.enemies); e++ {
@@ -151,7 +149,6 @@ func (levelClass *Level) Update() error {
 			if levelClass.enemies[e].Dead {
 				continue
 			}
-
 			newEnemyList = append(newEnemyList, levelClass.enemies[e])
 		}
 
@@ -167,7 +164,7 @@ func (levelClass *Level) Update() error {
 	if time.Now().Sub(LAST_SPAWN_TIME).Seconds() > 2 {
 		s1 := rand.NewSource(time.Now().UnixNano())
 		r1 := rand.New(s1)
-		x := r1.Intn(systems.WINDOWMANAGER.SCREENWIDTH - 50)
+		x := r1.Intn(systems.WINDOWMANAGER.SCREENWIDTH - 100)
 		levelClass.enemies = append(levelClass.enemies, npcs.NewEnemy(float64(x), 0))
 		LAST_SPAWN_TIME = time.Now()
 	}
@@ -176,11 +173,13 @@ func (levelClass *Level) Update() error {
 	for e := 0; e < len(levelClass.enemies); e++ {
 		levelClass.enemies[e].PosY += 5
 
+		//Moves the Enemy Back To the Top of the screen
 		if levelClass.enemies[e].PosY > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
 			levelClass.enemies[e].PosY = 0
 		}
 	}
 
+	//INPUTs
 	levelClass.keys = inpututil.AppendPressedKeys(levelClass.keys[:0])
 	for _, p := range levelClass.keys {
 		_, ok := keyboard.KeyRect(p)
@@ -210,7 +209,6 @@ func (levelClass *Level) Update() error {
 			levelClass.soundEffectPlayer.SetVolume(1)
 			levelClass.soundEffectPlayer.Rewind()
 			levelClass.soundEffectPlayer.Play()
-
 		}
 
 		if p.String() == "Escape" {

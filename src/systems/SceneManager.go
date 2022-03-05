@@ -2,7 +2,6 @@ package systems
 
 import (
 	"SpaceShooter/src/interfaces"
-	"fmt"
 )
 
 var SCENEMANAGER *SceneManager
@@ -21,7 +20,6 @@ func NewSceneManager() *SceneManager {
 func (s *SceneManager) setScene() {
 	l := len(s.allScenese)
 	s.CurrentScene = s.allScenese[l-1]
-	fmt.Println("New Scene", s.CurrentScene.GetName())
 	s.CurrentScene.Init()
 }
 
@@ -36,9 +34,7 @@ func (s *SceneManager) Pop() {
 		s.CurrentScene = nil
 		return
 	}
-
 	l := len(s.allScenese)
-	fmt.Println("Poping", s.CurrentScene.GetName())
 	s.allScenese = s.allScenese[:l-1]
 	s.CurrentScene = nil
 	s.setScene()
