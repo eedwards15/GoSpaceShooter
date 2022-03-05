@@ -29,22 +29,25 @@ type Level struct {
 
 var (
 	SCENENAME = "Level 1"
+	PLAYER    = player.NewPLayer()
 )
 
-func (levelOneClass *Level) Init() {
-	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[SCENENAME].BackgroundMusic).PlaySong()
-	player.PLAYER.Ship.SelectShip(1, 2)
-	levelOneClass.enemies = append(levelOneClass.enemies, npcs.NewEnemy())
-
+func (levelClass *Level) Init() {
 	cX, cY := systems.WINDOWMANAGER.Center()
-	player.PLAYER.XPos = cX
-	player.PLAYER.YPos = cY
 
-	levelOneClass.soundEffectPlayer, _ = audio.CurrentContext().NewPlayer(player.PLAYER.Ship.FireSound)
+	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[SCENENAME].BackgroundMusic).PlaySong()
+	PLAYER.Ship.SelectShip(1, 2)
+
+	levelClass.enemies = append(levelClass.enemies, npcs.NewEnemy())
+
+	PLAYER.XPos = cX
+	PLAYER.YPos = cY
+
+	levelClass.soundEffectPlayer, _ = audio.CurrentContext().NewPlayer(PLAYER.Ship.FireSound)
 
 }
 
-func (levelOneClass *Level) GetName() string {
+func (levelClass *Level) GetName() string {
 	return "Level 1"
 }
 
@@ -53,30 +56,30 @@ func NewLevelOne() *Level {
 	return g
 }
 
-func (levelOneClass *Level) Draw(screen *ebiten.Image) {
+func (levelClass *Level) Draw(screen *ebiten.Image) {
 	screen.Fill(color.NRGBA{0x00, 0x40, 0x80, 0xff})
 
 	backgroundOP := &ebiten.DrawImageOptions{}
 	backgroundOP.GeoM.Scale(2, 2)
 	screen.DrawImage(systems.ASSETSYSTEM.Assets[SCENENAME].Images["Background"], backgroundOP)
 
-	for i := 0; i < len(levelOneClass.playerBullets); i++ {
+	for i := 0; i < len(levelClass.playerBullets); i++ {
 		op := &ebiten.DrawImageOptions{}
 		op.Filter = ebiten.FilterLinear
-		op.GeoM.Translate(levelOneClass.playerBullets[i].Xpos, levelOneClass.playerBullets[i].Ypos)
-		screen.DrawImage(levelOneClass.playerBullets[i].Sprite, op)
+		op.GeoM.Translate(levelClass.playerBullets[i].Xpos, levelClass.playerBullets[i].Ypos)
+		screen.DrawImage(levelClass.playerBullets[i].Sprite, op)
 	}
 
 	op := &ebiten.DrawImageOptions{}
 	op.Filter = ebiten.FilterLinear
-	op.GeoM.Translate(player.PLAYER.XPos, player.PLAYER.YPos)
-	screen.DrawImage(player.PLAYER.Ship.CurrentShipImage, op)
+	op.GeoM.Translate(PLAYER.XPos, PLAYER.YPos)
+	screen.DrawImage(PLAYER.Ship.CurrentShipImage, op)
 
-	for e := 0; e < len(levelOneClass.enemies); e++ {
+	for e := 0; e < len(levelClass.enemies); e++ {
 		op := &ebiten.DrawImageOptions{}
 		op.Filter = ebiten.FilterLinear
-		op.GeoM.Translate(levelOneClass.enemies[e].PosX, levelOneClass.enemies[e].PosY)
-		screen.DrawImage(levelOneClass.enemies[e].Image, op)
+		op.GeoM.Translate(levelClass.enemies[e].PosX, levelClass.enemies[e].PosY)
+		screen.DrawImage(levelClass.enemies[e].Image, op)
 	}
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
@@ -85,55 +88,55 @@ func RemoveIndex(s []*weapons.Bullet, index int) []*weapons.Bullet {
 	return append(s[:index], s[index+1:]...)
 }
 
-func (levelOneClass *Level) Update() error {
-	for i := 0; i < len(levelOneClass.playerBullets); i++ {
-		levelOneClass.playerBullets[i].Ypos -= 10
+func (levelClass *Level) Update() error {
+	for i := 0; i < len(levelClass.playerBullets); i++ {
+		levelClass.playerBullets[i].Ypos -= 10
 
-		for e := 0; e < len(levelOneClass.enemies); e++ {
+		for e := 0; e < len(levelClass.enemies); e++ {
 
-			if levelOneClass.enemies != nil && helpers.DistanceBetween(levelOneClass.enemies[e].PosX, levelOneClass.enemies[e].PosY, levelOneClass.playerBullets[i].Xpos, levelOneClass.playerBullets[i].Ypos) <= 40 {
-				levelOneClass.enemies = append(levelOneClass.enemies[:e], levelOneClass.enemies[e+1:]...)
-				levelOneClass.playerBullets = RemoveIndex(levelOneClass.playerBullets, i)
+			if levelClass.enemies != nil && helpers.DistanceBetween(levelClass.enemies[e].PosX, levelClass.enemies[e].PosY, levelClass.playerBullets[i].Xpos, levelClass.playerBullets[i].Ypos) <= 40 {
+				levelClass.enemies = append(levelClass.enemies[:e], levelClass.enemies[e+1:]...)
+				levelClass.playerBullets = RemoveIndex(levelClass.playerBullets, i)
 				break
 			}
 
 		}
 
-		if len(levelOneClass.playerBullets) > 0 && levelOneClass.playerBullets[i].Ypos < 0 {
-			levelOneClass.playerBullets = RemoveIndex(levelOneClass.playerBullets, i)
+		if len(levelClass.playerBullets) > 0 && levelClass.playerBullets[i].Ypos < 0 {
+			levelClass.playerBullets = RemoveIndex(levelClass.playerBullets, i)
 		}
 	}
 
-	levelOneClass.keys = inpututil.AppendPressedKeys(levelOneClass.keys[:0])
-	for _, p := range levelOneClass.keys {
+	levelClass.keys = inpututil.AppendPressedKeys(levelClass.keys[:0])
+	for _, p := range levelClass.keys {
 		_, ok := keyboard.KeyRect(p)
 
-		if p.String() == "A" && (player.PLAYER.XPos > 0) {
-			player.PLAYER.XPos -= 10
+		if p.String() == "A" && (PLAYER.XPos > 0) {
+			PLAYER.XPos -= 10
 		}
 
-		if p.String() == "D" && (player.PLAYER.XPos+(player.PLAYER.Ship.CurrentShipWidth) < float64(systems.WINDOWMANAGER.SCREENWIDTH)) {
-			player.PLAYER.XPos += 10
+		if p.String() == "D" && (PLAYER.XPos+(PLAYER.Ship.CurrentShipWidth) < float64(systems.WINDOWMANAGER.SCREENWIDTH)) {
+			PLAYER.XPos += 10
 		}
 
-		if p.String() == "W" && (player.PLAYER.YPos > 0) {
-			player.PLAYER.YPos -= 10
+		if p.String() == "W" && (PLAYER.YPos > 0) {
+			PLAYER.YPos -= 10
 		}
 
-		if p.String() == "S" && ((player.PLAYER.YPos + player.PLAYER.Ship.CurrentShipHeight) < float64(systems.WINDOWMANAGER.SCREENHEIGHT)) {
-			player.PLAYER.YPos += 10
+		if p.String() == "S" && ((PLAYER.YPos + PLAYER.Ship.CurrentShipHeight) < float64(systems.WINDOWMANAGER.SCREENHEIGHT)) {
+			PLAYER.YPos += 10
 		}
 
-		if p.String() == "Space" && !levelOneClass.soundEffectPlayer.IsPlaying() && (time.Now().Sub(levelOneClass.lastFire).Milliseconds() > player.PLAYER.Ship.FireRate) {
+		if p.String() == "Space" && !levelClass.soundEffectPlayer.IsPlaying() && (time.Now().Sub(levelClass.lastFire).Milliseconds() > PLAYER.Ship.FireRate) {
 
 			bullet := weapons.NewBullet(systems.ASSETSYSTEM.Assets[SCENENAME].Images["LaserBullet"])
-			bullet = bullet.SetCoordinates(player.PLAYER.XPos+(player.PLAYER.Ship.CurrentShipWidth/2)-(bullet.Width/2), player.PLAYER.YPos)
-			levelOneClass.playerBullets = append(levelOneClass.playerBullets, bullet)
-			levelOneClass.lastFire = time.Now()
+			bullet = bullet.SetCoordinates(PLAYER.XPos+(PLAYER.Ship.CurrentShipWidth/2)-(bullet.Width/2), PLAYER.YPos)
+			levelClass.playerBullets = append(levelClass.playerBullets, bullet)
+			levelClass.lastFire = time.Now()
 			systems.MUSICSYSTEM.SetVolume(.50)
-			levelOneClass.soundEffectPlayer.SetVolume(1)
-			levelOneClass.soundEffectPlayer.Rewind()
-			levelOneClass.soundEffectPlayer.Play()
+			levelClass.soundEffectPlayer.SetVolume(1)
+			levelClass.soundEffectPlayer.Rewind()
+			levelClass.soundEffectPlayer.Play()
 
 		}
 
