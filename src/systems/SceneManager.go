@@ -1,6 +1,8 @@
 package systems
 
-import "SpaceShooter/src/interfaces"
+import (
+	"SpaceShooter/src/interfaces"
+)
 
 var SCENEMANAGER *SceneManager
 
@@ -32,8 +34,8 @@ func (s *SceneManager) Pop() {
 		s.CurrentScene = nil
 		return
 	}
-
 	l := len(s.allScenese)
 	s.allScenese = s.allScenese[:l-1]
+	s.CurrentScene = nil
 	s.setScene()
 }

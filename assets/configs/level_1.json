@@ -9,11 +9,6 @@
       "Key" : "Background",
       "location": "art/scene/",
       "FileName": "Space-Background-Tiled.png"
-    },
-    {
-      "Key" : "LaserBullet",
-      "location": "art/weapons/",
-      "FileName": "laser_bullet.png"
     }
   ]
 }

@@ -11,4 +11,10 @@ type AssetConfig struct {
 		Location string `json:"location"`
 		FileName string `json:"FileName"`
 	} `json:"Images"`
+	SoundEffects []struct {
+		Key        string `json:"Key"`
+		Location   string `json:"location"`
+		FileName   string `json:"FileName"`
+		SampleRate int    `json:"SampleRate"`
+	} `json:"Sounds"`
 }

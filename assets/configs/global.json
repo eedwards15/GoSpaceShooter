@@ -1,0 +1,34 @@
+{
+  "Scene": "Global",
+  "Images": [
+    {
+      "Key" : "PlayerShips",
+      "location": "art/player/",
+      "FileName": "ships.png"
+    },
+    {
+      "Key" : "LaserBullet",
+      "location": "art/weapons/",
+      "FileName": "laser_bullet.png"
+    },
+    {
+      "Key" : "WeakEnemy",
+      "location" : "/art/enemies/",
+      "FileName": "enemyBlack1.png"
+    }
+  ],
+  "Sounds": [
+    {
+      "Key" : "BasicLaserShot",
+      "location": "sound effects/",
+      "FileName": "414885__matrixxx__retro-laser-shot-03.mp3",
+      "SampleRate": 44100
+    },
+    {
+      "Key" : "EnemyExplosion",
+      "location": "sound effects/",
+      "FileName": "200465__wubitog__explosion-longer.mp3",
+      "SampleRate": 44100
+    }
+  ]
+}

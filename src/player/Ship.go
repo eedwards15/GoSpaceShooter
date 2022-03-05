@@ -1,11 +1,10 @@
 package player
 
 import (
+	"SpaceShooter/src/systems"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"image"
-	"log"
 )
 
 type Ship struct {
@@ -31,19 +30,12 @@ func NewShip() *Ship {
 	ship.tileHeight = 75
 	ship.LoadImages()
 	ship.FireRate = 350
-	//Move this
-	f, _ := ebitenutil.OpenFile("assets/sound effects/414885__matrixxx__retro-laser-shot-03.mp3")
-	ship.FireSound, _ = mp3.DecodeWithSampleRate(44100, f)
-
+	ship.FireSound = systems.ASSETSYSTEM.Assets["Global"].SoundEffects["BasicLaserShot"]
 	return ship
 }
 
 func (ship *Ship) LoadImages() {
-	img, _, err := ebitenutil.NewImageFromFile("assets/art/player/ships.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	ship.ShipTileSheets = img
+	ship.ShipTileSheets = systems.ASSETSYSTEM.Assets["Global"].Images["PlayerShips"]
 }
 
 func (ship *Ship) SelectShip(row int, col int) {
