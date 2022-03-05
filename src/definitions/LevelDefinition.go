@@ -34,7 +34,7 @@ func NewLevelDefinition(assetConfig *AssetConfig) *LevelDefinition {
 		record := assetConfig.Images[i]
 		fmt.Println(record.Key)
 		path := path.Join("assets", record.Location, record.FileName)
-		l.Images[record.Key] = OpenImage(path)
+		l.Images[record.Key] = openImage(path)
 	}
 
 	//Sound Effects
@@ -42,7 +42,7 @@ func NewLevelDefinition(assetConfig *AssetConfig) *LevelDefinition {
 	for i := 0; i < len(assetConfig.SoundEffects); i++ {
 		record := assetConfig.SoundEffects[i]
 		path := path.Join("assets", record.Location, record.FileName)
-		l.SoundEffects[record.Key] = OpenSound(path, record.SampleRate)
+		l.SoundEffects[record.Key] = openSound(path, record.SampleRate)
 	}
 
 	return &l
@@ -53,14 +53,14 @@ type BackgroundMusic struct {
 	SampleRate int
 }
 
-func OpenImage(location string) *ebiten.Image {
+func openImage(location string) *ebiten.Image {
 	img, _, err := ebitenutil.NewImageFromFile(location)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return img
 }
-func OpenSound(location string, sampleRate int) *mp3.Stream {
+func openSound(location string, sampleRate int) *mp3.Stream {
 	f, _ := ebitenutil.OpenFile(location)
 	fireSound, _ := mp3.DecodeWithSampleRate(sampleRate, f)
 	return fireSound

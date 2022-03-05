@@ -30,9 +30,6 @@ func NewShip() *Ship {
 	ship.tileHeight = 75
 	ship.LoadImages()
 	ship.FireRate = 350
-	//Move this
-	//f, _ := ebitenutil.OpenFile("assets/sound effects/414885__matrixxx__retro-laser-shot-03.mp3")
-	//ship.FireSound, _ = mp3.DecodeWithSampleRate(44100, f)
 	ship.FireSound = systems.ASSETSYSTEM.Assets["Global"].SoundEffects["BasicLaserShot"]
 	return ship
 }

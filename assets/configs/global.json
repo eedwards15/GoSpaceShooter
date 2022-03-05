@@ -5,6 +5,16 @@
       "Key" : "PlayerShips",
       "location": "art/player/",
       "FileName": "ships.png"
+    },
+    {
+      "Key" : "LaserBullet",
+      "location": "art/weapons/",
+      "FileName": "laser_bullet.png"
+    },
+    {
+      "Key" : "WeakEnemy",
+      "location" : "/art/enemies/",
+      "FileName": "enemyBlack1.png"
     }
   ],
   "Sounds": [

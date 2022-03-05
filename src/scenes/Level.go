@@ -28,8 +28,9 @@ type Level struct {
 }
 
 var (
-	SCENENAME = "Level 1"
-	PLAYER    = &player.Player{}
+	SCENENAME    = "Level 1"
+	GOBAL_ASSETS = "Global"
+	PLAYER       = &player.Player{}
 )
 
 func (levelClass *Level) Init() {
@@ -130,7 +131,7 @@ func (levelClass *Level) Update() error {
 
 		if p.String() == "Space" && !levelClass.soundEffectPlayer.IsPlaying() && (time.Now().Sub(levelClass.lastFire).Milliseconds() > PLAYER.Ship.FireRate) {
 
-			bullet := weapons.NewBullet(systems.ASSETSYSTEM.Assets[SCENENAME].Images["LaserBullet"])
+			bullet := weapons.NewBullet(systems.ASSETSYSTEM.Assets[GOBAL_ASSETS].Images["LaserBullet"])
 			bullet = bullet.SetCoordinates(PLAYER.XPos+(PLAYER.Ship.CurrentShipWidth/2)-(bullet.Width/2), PLAYER.YPos)
 			levelClass.playerBullets = append(levelClass.playerBullets, bullet)
 			levelClass.lastFire = time.Now()
