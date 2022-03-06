@@ -15,6 +15,16 @@
       "Key" : "WeakEnemy",
       "location" : "/art/enemies/",
       "FileName": "enemyBlack1.png"
+    },
+    {
+      "Key" : "MidRankEnemy",
+      "location" : "/art/enemies/",
+      "FileName": "enemyBlack5.png"
+    },
+    {
+      "Key" : "LaserRed",
+      "location" : "art/weapons/",
+      "FileName": "laserRed02.png"
     }
   ],
   "Sounds": [
@@ -29,6 +39,13 @@
       "location": "sound effects/",
       "FileName": "200465__wubitog__explosion-longer.mp3",
       "SampleRate": 44100
+    },
+    {
+      "Key" : "PlayerDeath",
+      "location": "sound effects/",
+      "FileName": "515005__matrixxx__retro-space-explosion.mp3",
+      "SampleRate": 44100
     }
+    
   ]
 }

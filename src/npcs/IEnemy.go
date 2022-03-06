@@ -1,14 +1,21 @@
 package npcs
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"SpaceShooter/src/weapons"
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 type IEnemy interface {
-	SetPosX() float64
-	SetPosY() float64
+	SetPosX(x float64)
+	SetPosY(y float64)
+	GetPosX() float64
+	GetPosY() float64
 	GetImage() *ebiten.Image
 	IsDead() bool
-	Kill()
+	TakeDamage()
 	GetWidth() int
 	GetHeight() int
 	CanShoot() bool
+	GetScoreAmount() int
+	Fire() *weapons.Bullet
 }

@@ -6,7 +6,6 @@ import (
 	"SpaceShooter/src/player"
 	"SpaceShooter/src/systems"
 	"SpaceShooter/src/weapons"
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
@@ -25,13 +24,15 @@ import (
 //Convert this into something that loads the levels.
 
 type Level struct {
-	keys              []ebiten.Key
-	enemies           []*npcs.Enemy
-	soundEffectPlayer *audio.Player
-	lastFire          time.Time
-	playerBullets     []*weapons.Bullet
-	SCENENAME         string
-	fxPlayer          *audio.Player
+	keys                   []ebiten.Key
+	enemies                []npcs.IEnemy
+	soundEffectPlayer      *audio.Player
+	soundEffectPlayerDeath *audio.Player
+	lastFire               time.Time
+	playerBullets          []*weapons.Bullet
+	EnemyBullets           []*weapons.Bullet
+	SCENENAME              string
+	fxPlayer               *audio.Player
 }
 
 var (
@@ -43,10 +44,11 @@ var (
 )
 
 func (levelClass *Level) Init() {
-	fmt.Println("INIT")
-	levelClass.enemies = []*npcs.Enemy{}
+	levelClass.enemies = []npcs.IEnemy{}
 	levelClass.SCENENAME = "Level 1"
 	levelClass.playerBullets = []*weapons.Bullet{}
+	levelClass.EnemyBullets = []*weapons.Bullet{}
+
 	SCORE = 0
 	systems.MUSICSYSTEM.SetVolume(.50)
 	cX, cY := systems.WINDOWMANAGER.Center()
@@ -55,10 +57,12 @@ func (levelClass *Level) Init() {
 
 	soundEffect := systems.ASSETSYSTEM.Assets["Global"].SoundEffects["EnemyExplosion"]
 	levelClass.fxPlayer, _ = audio.CurrentContext().NewPlayer(soundEffect)
+	levelClass.soundEffectPlayerDeath, _ = audio.CurrentContext().NewPlayer(systems.ASSETSYSTEM.Assets["Global"].SoundEffects["PlayerDeath"])
 
 	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[levelClass.SCENENAME].BackgroundMusic).PlaySong()
 	PLAYER.Ship.SelectShip(1, 2)
-	levelClass.enemies = append(levelClass.enemies, npcs.NewEnemy(float64(systems.WINDOWMANAGER.SCREENWIDTH/2), 0))
+
+	levelClass.enemies = append(levelClass.enemies, npcs.NewWeakEnemy(float64(systems.WINDOWMANAGER.SCREENWIDTH/2), 0))
 	levelClass.soundEffectPlayer, _ = audio.CurrentContext().NewPlayer(PLAYER.Ship.FireSound)
 
 	tt, err := opentype.Parse(*helpers.LoadFile("assets/fonts/arcades/Arcades.ttf"))
@@ -95,10 +99,16 @@ func (levelClass *Level) Draw(screen *ebiten.Image) {
 		screen.DrawImage(levelClass.playerBullets[i].Sprite, op)
 	}
 
+	for i := 0; i < len(levelClass.EnemyBullets); i++ {
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos)
+		screen.DrawImage(levelClass.EnemyBullets[i].Sprite, op)
+	}
+
 	for e := 0; e < len(levelClass.enemies); e++ {
 		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(levelClass.enemies[e].PosX, levelClass.enemies[e].PosY)
-		screen.DrawImage(levelClass.enemies[e].Image, op)
+		op.GeoM.Translate(levelClass.enemies[e].GetPosX(), levelClass.enemies[e].GetPosY())
+		screen.DrawImage(levelClass.enemies[e].GetImage(), op)
 	}
 
 	PLAYER.Draw(screen)
@@ -117,12 +127,23 @@ func (levelClass *Level) Update() error {
 
 	for e := 0; e < len(levelClass.enemies); e++ {
 
-		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.enemies[e].PosX, levelClass.enemies[e].PosY) <= 50 {
+		//Check for collision with player.
+		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.enemies[e].GetPosX(), levelClass.enemies[e].GetPosY()) <= 50 {
 			PLAYER.IsDead = true
 			systems.SCENEMANAGER.Push(NewGameOver())
+			levelClass.soundEffectPlayerDeath.Rewind()
+			levelClass.soundEffectPlayerDeath.Play()
 			return nil
 		}
 
+		if levelClass.enemies[e].CanShoot() {
+			//Fire Bullets
+			ebullet := levelClass.enemies[e].Fire() // Will return nil if they can't fire yet.
+			if ebullet != nil {
+				ebullet.SetCoordinates(levelClass.enemies[e].GetPosX()+float64(levelClass.enemies[e].GetWidth()/2)-(ebullet.Width/2), levelClass.enemies[e].GetPosY())
+				levelClass.EnemyBullets = append(levelClass.EnemyBullets, ebullet)
+			}
+		}
 	}
 
 	for i := 0; i < len(levelClass.playerBullets); i++ {
@@ -132,21 +153,25 @@ func (levelClass *Level) Update() error {
 		//EnemyExplosion
 		for e := 0; e < len(levelClass.enemies); e++ {
 			//Check to see if any bullets hit any of the enemies.
-			if levelClass.enemies != nil && helpers.DistanceBetween(levelClass.enemies[e].PosX+float64(levelClass.enemies[e].Width/2), levelClass.enemies[e].PosY, levelClass.playerBullets[i].Xpos, levelClass.playerBullets[i].Ypos) <= 50 {
-				levelClass.enemies[e].Dead = true
+			if levelClass.enemies != nil && helpers.DistanceBetween(levelClass.enemies[e].GetPosX()+float64(levelClass.enemies[e].GetWidth()/2), levelClass.enemies[e].GetPosY(), levelClass.playerBullets[i].Xpos, levelClass.playerBullets[i].Ypos) <= 50 {
+				levelClass.enemies[e].TakeDamage()
 				removeBullet = true
-				SCORE += 10
-				levelClass.fxPlayer.Rewind()
-				levelClass.fxPlayer.Play()
+
+				if levelClass.enemies[e].IsDead() {
+					SCORE += levelClass.enemies[e].GetScoreAmount()
+					levelClass.fxPlayer.Rewind()
+					levelClass.fxPlayer.Play()
+				}
+
 				break
 			}
 
 		}
 
 		//Clean up dead enemies
-		newEnemyList := []*npcs.Enemy{}
+		newEnemyList := []npcs.IEnemy{}
 		for e := 0; e < len(levelClass.enemies); e++ {
-			if levelClass.enemies[e].Dead {
+			if levelClass.enemies[e].IsDead() {
 				continue
 			}
 			newEnemyList = append(newEnemyList, levelClass.enemies[e])
@@ -160,22 +185,43 @@ func (levelClass *Level) Update() error {
 		}
 	}
 
-	//Create New Enemy
+	for i := 0; i < len(levelClass.EnemyBullets); i++ {
+		levelClass.EnemyBullets[i].Ypos += 10
+
+		if helpers.DistanceBetween(PLAYER.XPos+float64(PLAYER.Ship.CurrentShipWidth/2), PLAYER.YPos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 30 {
+			PLAYER.IsDead = true
+			systems.SCENEMANAGER.Push(NewGameOver())
+			levelClass.soundEffectPlayerDeath.Rewind()
+			levelClass.soundEffectPlayerDeath.Play()
+			return nil
+		}
+
+		if len(levelClass.EnemyBullets) > 0 && levelClass.EnemyBullets[i].Ypos > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
+			levelClass.EnemyBullets = RemoveIndex(levelClass.EnemyBullets, i)
+		}
+	}
+
+	//Create New WeakEnemy
+	//Replace With factory
 	if time.Now().Sub(LAST_SPAWN_TIME).Seconds() > 2 {
 		s1 := rand.NewSource(time.Now().UnixNano())
 		r1 := rand.New(s1)
 		x := r1.Intn(systems.WINDOWMANAGER.SCREENWIDTH - 100)
-		levelClass.enemies = append(levelClass.enemies, npcs.NewEnemy(float64(x), 0))
+
+		newEnemey := npcs.SpawnNewEnemy(float64(x), 0)
+		levelClass.enemies = append(levelClass.enemies, newEnemey)
+
 		LAST_SPAWN_TIME = time.Now()
 	}
 
-	//Enemy Movement
+	//WeakEnemy Movement
 	for e := 0; e < len(levelClass.enemies); e++ {
-		levelClass.enemies[e].PosY += 5
+		currentLocationY := levelClass.enemies[e].GetPosY()
+		levelClass.enemies[e].SetPosY(currentLocationY + 5)
 
-		//Moves the Enemy Back To the Top of the screen
-		if levelClass.enemies[e].PosY > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
-			levelClass.enemies[e].PosY = 0
+		//Moves the WeakEnemy Back To the Top of the screen
+		if levelClass.enemies[e].GetPosY() > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
+			levelClass.enemies[e].SetPosY(0)
 		}
 	}
 
