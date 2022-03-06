@@ -21,6 +21,12 @@ func NewBullet(sprite *ebiten.Image) *Bullet {
 	return &b
 }
 
+func (bulletClass *Bullet) Draw(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(bulletClass.Xpos, bulletClass.Ypos)
+	screen.DrawImage(bulletClass.Sprite, op)
+}
+
 func (bulletClass *Bullet) SetCoordinates(xpos, ypos float64) *Bullet {
 	bulletClass.Xpos = xpos
 	bulletClass.Ypos = ypos

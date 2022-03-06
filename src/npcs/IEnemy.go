@@ -18,4 +18,6 @@ type IEnemy interface {
 	CanShoot() bool
 	GetScoreAmount() int
 	Fire() *weapons.Bullet
+	Draw(screen *ebiten.Image)
+	Update()
 }
