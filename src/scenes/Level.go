@@ -6,7 +6,6 @@ import (
 	"SpaceShooter/src/player"
 	"SpaceShooter/src/systems"
 	"SpaceShooter/src/weapons"
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
@@ -43,7 +42,6 @@ var (
 )
 
 func (levelClass *Level) Init() {
-	fmt.Println("INIT")
 	levelClass.enemies = []npcs.IEnemy{}
 	levelClass.SCENENAME = "Level 1"
 	levelClass.playerBullets = []*weapons.Bullet{}
@@ -136,9 +134,13 @@ func (levelClass *Level) Update() error {
 			if levelClass.enemies != nil && helpers.DistanceBetween(levelClass.enemies[e].GetPosX()+float64(levelClass.enemies[e].GetWidth()/2), levelClass.enemies[e].GetPosY(), levelClass.playerBullets[i].Xpos, levelClass.playerBullets[i].Ypos) <= 50 {
 				levelClass.enemies[e].TakeDamage()
 				removeBullet = true
-				SCORE += 10
-				levelClass.fxPlayer.Rewind()
-				levelClass.fxPlayer.Play()
+
+				if levelClass.enemies[e].IsDead() {
+					SCORE += levelClass.enemies[e].GetScoreAmount()
+					levelClass.fxPlayer.Rewind()
+					levelClass.fxPlayer.Play()
+				}
+
 				break
 			}
 
@@ -167,7 +169,10 @@ func (levelClass *Level) Update() error {
 		s1 := rand.NewSource(time.Now().UnixNano())
 		r1 := rand.New(s1)
 		x := r1.Intn(systems.WINDOWMANAGER.SCREENWIDTH - 100)
-		levelClass.enemies = append(levelClass.enemies, npcs.NewWeakEnemy(float64(x), 0))
+
+		newEnemey := npcs.SpawnNewEnemy(float64(x), 0)
+		levelClass.enemies = append(levelClass.enemies, newEnemey)
+
 		LAST_SPAWN_TIME = time.Now()
 	}
 

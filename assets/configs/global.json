@@ -15,6 +15,11 @@
       "Key" : "WeakEnemy",
       "location" : "/art/enemies/",
       "FileName": "enemyBlack1.png"
+    },
+    {
+      "Key" : "MidRankEnemy",
+      "location" : "/art/enemies/",
+      "FileName": "enemyBlack5.png"
     }
   ],
   "Sounds": [

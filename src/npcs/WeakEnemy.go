@@ -6,14 +6,19 @@ import (
 )
 
 type WeakEnemy struct {
-	posX     float64
-	posY     float64
-	image    *ebiten.Image
-	isDead   bool
-	width    int
-	height   int
-	canShoot bool
-	life     int
+	posX        float64
+	posY        float64
+	image       *ebiten.Image
+	isDead      bool
+	width       int
+	height      int
+	canShoot    bool
+	life        int
+	scoreAmount int
+}
+
+func (e *WeakEnemy) GetScoreAmount() int {
+	return e.scoreAmount
 }
 
 func NewWeakEnemy(x, y float64) IEnemy {
@@ -21,14 +26,15 @@ func NewWeakEnemy(x, y float64) IEnemy {
 	w, h := img.Size()
 
 	e := &WeakEnemy{
-		image:    img,
-		isDead:   false,
-		width:    w,
-		height:   h,
-		canShoot: false,
-		posX:     x,
-		posY:     y,
-		life:     1,
+		image:       img,
+		isDead:      false,
+		width:       w,
+		height:      h,
+		canShoot:    false,
+		posX:        x,
+		posY:        y,
+		life:        1,
+		scoreAmount: 10,
 	}
 
 	return e

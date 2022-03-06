@@ -13,4 +13,5 @@ type IEnemy interface {
 	GetWidth() int
 	GetHeight() int
 	CanShoot() bool
+	GetScoreAmount() int
 }
