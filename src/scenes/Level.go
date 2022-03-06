@@ -24,14 +24,15 @@ import (
 //Convert this into something that loads the levels.
 
 type Level struct {
-	keys              []ebiten.Key
-	enemies           []npcs.IEnemy
-	soundEffectPlayer *audio.Player
-	lastFire          time.Time
-	playerBullets     []*weapons.Bullet
-	EnemyBullets      []*weapons.Bullet
-	SCENENAME         string
-	fxPlayer          *audio.Player
+	keys                   []ebiten.Key
+	enemies                []npcs.IEnemy
+	soundEffectPlayer      *audio.Player
+	soundEffectPlayerDeath *audio.Player
+	lastFire               time.Time
+	playerBullets          []*weapons.Bullet
+	EnemyBullets           []*weapons.Bullet
+	SCENENAME              string
+	fxPlayer               *audio.Player
 }
 
 var (
@@ -56,6 +57,7 @@ func (levelClass *Level) Init() {
 
 	soundEffect := systems.ASSETSYSTEM.Assets["Global"].SoundEffects["EnemyExplosion"]
 	levelClass.fxPlayer, _ = audio.CurrentContext().NewPlayer(soundEffect)
+	levelClass.soundEffectPlayerDeath, _ = audio.CurrentContext().NewPlayer(systems.ASSETSYSTEM.Assets["Global"].SoundEffects["PlayerDeath"])
 
 	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[levelClass.SCENENAME].BackgroundMusic).PlaySong()
 	PLAYER.Ship.SelectShip(1, 2)
@@ -129,6 +131,8 @@ func (levelClass *Level) Update() error {
 		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.enemies[e].GetPosX(), levelClass.enemies[e].GetPosY()) <= 50 {
 			PLAYER.IsDead = true
 			systems.SCENEMANAGER.Push(NewGameOver())
+			levelClass.soundEffectPlayerDeath.Rewind()
+			levelClass.soundEffectPlayerDeath.Play()
 			return nil
 		}
 
@@ -187,6 +191,8 @@ func (levelClass *Level) Update() error {
 		if helpers.DistanceBetween(PLAYER.XPos+float64(PLAYER.Ship.CurrentShipWidth/2), PLAYER.YPos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 30 {
 			PLAYER.IsDead = true
 			systems.SCENEMANAGER.Push(NewGameOver())
+			levelClass.soundEffectPlayerDeath.Rewind()
+			levelClass.soundEffectPlayerDeath.Play()
 			return nil
 		}
 

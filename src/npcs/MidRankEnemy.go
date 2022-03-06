@@ -3,7 +3,6 @@ package npcs
 import (
 	"SpaceShooter/src/systems"
 	"SpaceShooter/src/weapons"
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"time"
 )
@@ -23,7 +22,6 @@ type MidRankEnemy struct {
 
 func (e *MidRankEnemy) Fire() *weapons.Bullet {
 	if time.Now().Sub(e.lastFire).Milliseconds() > 800 {
-		fmt.Println("fire")
 		b := weapons.NewBullet(systems.ASSETSYSTEM.Assets["Global"].Images["LaserRed"])
 		e.lastFire = time.Now()
 		return b
