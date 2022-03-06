@@ -20,6 +20,11 @@
       "Key" : "MidRankEnemy",
       "location" : "/art/enemies/",
       "FileName": "enemyBlack5.png"
+    },
+    {
+      "Key" : "LaserRed",
+      "location" : "art/weapons/",
+      "FileName": "laserRed02.png"
     }
   ],
   "Sounds": [

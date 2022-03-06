@@ -2,7 +2,10 @@ package npcs
 
 import (
 	"SpaceShooter/src/systems"
+	"SpaceShooter/src/weapons"
+	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
+	"time"
 )
 
 type MidRankEnemy struct {
@@ -15,6 +18,17 @@ type MidRankEnemy struct {
 	canShoot    bool
 	life        int
 	scoreAmount int
+	lastFire    time.Time
+}
+
+func (e *MidRankEnemy) Fire() *weapons.Bullet {
+	if time.Now().Sub(e.lastFire).Milliseconds() > 800 {
+		fmt.Println("fire")
+		b := weapons.NewBullet(systems.ASSETSYSTEM.Assets["Global"].Images["LaserRed"])
+		e.lastFire = time.Now()
+		return b
+	}
+	return nil
 }
 
 func NewMidRankEnemy(x, y float64) IEnemy {
@@ -26,7 +40,7 @@ func NewMidRankEnemy(x, y float64) IEnemy {
 		isDead:      false,
 		width:       w,
 		height:      h,
-		canShoot:    false,
+		canShoot:    true,
 		posX:        x,
 		posY:        y,
 		life:        3,

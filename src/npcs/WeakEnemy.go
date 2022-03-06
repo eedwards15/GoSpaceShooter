@@ -2,6 +2,7 @@ package npcs
 
 import (
 	"SpaceShooter/src/systems"
+	"SpaceShooter/src/weapons"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -15,6 +16,11 @@ type WeakEnemy struct {
 	canShoot    bool
 	life        int
 	scoreAmount int
+}
+
+func (e *WeakEnemy) Fire() *weapons.Bullet {
+	//This Enemy Can not Fire.
+	return nil
 }
 
 func (e *WeakEnemy) GetScoreAmount() int {

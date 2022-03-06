@@ -1,6 +1,9 @@
 package npcs
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"SpaceShooter/src/weapons"
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 type IEnemy interface {
 	SetPosX(x float64)
@@ -14,4 +17,5 @@ type IEnemy interface {
 	GetHeight() int
 	CanShoot() bool
 	GetScoreAmount() int
+	Fire() *weapons.Bullet
 }

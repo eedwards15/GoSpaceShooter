@@ -29,6 +29,7 @@ type Level struct {
 	soundEffectPlayer *audio.Player
 	lastFire          time.Time
 	playerBullets     []*weapons.Bullet
+	EnemyBullets      []*weapons.Bullet
 	SCENENAME         string
 	fxPlayer          *audio.Player
 }
@@ -45,6 +46,8 @@ func (levelClass *Level) Init() {
 	levelClass.enemies = []npcs.IEnemy{}
 	levelClass.SCENENAME = "Level 1"
 	levelClass.playerBullets = []*weapons.Bullet{}
+	levelClass.EnemyBullets = []*weapons.Bullet{}
+
 	SCORE = 0
 	systems.MUSICSYSTEM.SetVolume(.50)
 	cX, cY := systems.WINDOWMANAGER.Center()
@@ -94,6 +97,12 @@ func (levelClass *Level) Draw(screen *ebiten.Image) {
 		screen.DrawImage(levelClass.playerBullets[i].Sprite, op)
 	}
 
+	for i := 0; i < len(levelClass.EnemyBullets); i++ {
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos)
+		screen.DrawImage(levelClass.EnemyBullets[i].Sprite, op)
+	}
+
 	for e := 0; e < len(levelClass.enemies); e++ {
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(levelClass.enemies[e].GetPosX(), levelClass.enemies[e].GetPosY())
@@ -116,12 +125,21 @@ func (levelClass *Level) Update() error {
 
 	for e := 0; e < len(levelClass.enemies); e++ {
 
+		//Check for collision with player.
 		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.enemies[e].GetPosX(), levelClass.enemies[e].GetPosY()) <= 50 {
 			PLAYER.IsDead = true
 			systems.SCENEMANAGER.Push(NewGameOver())
 			return nil
 		}
 
+		if levelClass.enemies[e].CanShoot() {
+			//Fire Bullets
+			ebullet := levelClass.enemies[e].Fire() // Will return nil if they can't fire yet.
+			if ebullet != nil {
+				ebullet.SetCoordinates(levelClass.enemies[e].GetPosX()+float64(levelClass.enemies[e].GetWidth()/2)-(ebullet.Width/2), levelClass.enemies[e].GetPosY())
+				levelClass.EnemyBullets = append(levelClass.EnemyBullets, ebullet)
+			}
+		}
 	}
 
 	for i := 0; i < len(levelClass.playerBullets); i++ {
@@ -160,6 +178,20 @@ func (levelClass *Level) Update() error {
 		//If Bullet Gets out of screen range remove.
 		if removeBullet == true || len(levelClass.playerBullets) > 0 && levelClass.playerBullets[i].Ypos < 0 {
 			levelClass.playerBullets = RemoveIndex(levelClass.playerBullets, i)
+		}
+	}
+
+	for i := 0; i < len(levelClass.EnemyBullets); i++ {
+		levelClass.EnemyBullets[i].Ypos += 10
+
+		if helpers.DistanceBetween(PLAYER.XPos+float64(PLAYER.Ship.CurrentShipWidth/2), PLAYER.YPos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 30 {
+			PLAYER.IsDead = true
+			systems.SCENEMANAGER.Push(NewGameOver())
+			return nil
+		}
+
+		if len(levelClass.EnemyBullets) > 0 && levelClass.EnemyBullets[i].Ypos > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
+			levelClass.EnemyBullets = RemoveIndex(levelClass.EnemyBullets, i)
 		}
 	}
 
