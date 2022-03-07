@@ -47,6 +47,21 @@ func NewMidRankEnemy(x, y float64) IEnemy {
 
 	return e
 }
+
+func (e *MidRankEnemy) Update() {
+	e.posY += 5
+	//Moves the WeakEnemy Back To the Top of the screen
+	if e.posY > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
+		e.posY = 0
+	}
+}
+
+func (e *MidRankEnemy) Draw(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(e.posX, e.posY)
+	screen.DrawImage(e.image, op)
+}
+
 func (e MidRankEnemy) GetScoreAmount() int {
 	return e.scoreAmount
 }

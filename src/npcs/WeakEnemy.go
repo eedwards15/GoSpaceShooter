@@ -18,6 +18,20 @@ type WeakEnemy struct {
 	scoreAmount int
 }
 
+func (e *WeakEnemy) Update() {
+	e.posY += 5
+	//Moves the WeakEnemy Back To the Top of the screen
+	if e.posY > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
+		e.posY = 0
+	}
+}
+
+func (e *WeakEnemy) Draw(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(e.posX, e.posY)
+	screen.DrawImage(e.image, op)
+}
+
 func (e *WeakEnemy) Fire() *weapons.Bullet {
 	//This Enemy Can not Fire.
 	return nil

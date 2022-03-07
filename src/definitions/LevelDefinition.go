@@ -1,7 +1,6 @@
 package definitions
 
 import (
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -30,9 +29,7 @@ func NewLevelDefinition(assetConfig *AssetConfig) *LevelDefinition {
 	//Images
 	l.Images = make(map[string]*ebiten.Image)
 	for i := 0; i < len(assetConfig.Images); i++ {
-
 		record := assetConfig.Images[i]
-		fmt.Println(record.Key)
 		path := path.Join("assets", record.Location, record.FileName)
 		l.Images[record.Key] = openImage(path)
 	}

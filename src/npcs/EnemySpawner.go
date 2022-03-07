@@ -5,7 +5,9 @@ import (
 	"time"
 )
 
-type EnemySpawner struct{}
+type EnemySpawner struct {
+	LAST_SPAWN_TIME time.Time
+}
 
 func SpawnNewEnemy(xPos, yPos float64) IEnemy {
 	s1 := rand.NewSource(time.Now().UnixNano())

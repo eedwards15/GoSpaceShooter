@@ -94,24 +94,19 @@ func (levelClass *Level) Draw(screen *ebiten.Image) {
 	screen.DrawImage(systems.ASSETSYSTEM.Assets[levelClass.SCENENAME].Images["Background"], backgroundOP)
 
 	for i := 0; i < len(levelClass.playerBullets); i++ {
-		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(levelClass.playerBullets[i].Xpos, levelClass.playerBullets[i].Ypos)
-		screen.DrawImage(levelClass.playerBullets[i].Sprite, op)
+		levelClass.playerBullets[i].Draw(screen)
 	}
 
 	for i := 0; i < len(levelClass.EnemyBullets); i++ {
-		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos)
-		screen.DrawImage(levelClass.EnemyBullets[i].Sprite, op)
+		levelClass.EnemyBullets[i].Draw(screen)
 	}
 
 	for e := 0; e < len(levelClass.enemies); e++ {
-		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(levelClass.enemies[e].GetPosX(), levelClass.enemies[e].GetPosY())
-		screen.DrawImage(levelClass.enemies[e].GetImage(), op)
+		levelClass.enemies[e].Draw(screen)
 	}
 
 	PLAYER.Draw(screen)
+
 	text.Draw(screen, "Score: "+strconv.Itoa(SCORE), TITLE_ARCADE_FONT, 20, 20, color.White)
 
 	//ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
@@ -126,7 +121,6 @@ func (levelClass *Level) Update() error {
 	}
 
 	for e := 0; e < len(levelClass.enemies); e++ {
-
 		//Check for collision with player.
 		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.enemies[e].GetPosX(), levelClass.enemies[e].GetPosY()) <= 50 {
 			PLAYER.IsDead = true
@@ -136,7 +130,8 @@ func (levelClass *Level) Update() error {
 			return nil
 		}
 
-		if levelClass.enemies[e].CanShoot() {
+		//Fires Weapon If Enemy is alive.
+		if !levelClass.enemies[e].IsDead() && levelClass.enemies[e].CanShoot() {
 			//Fire Bullets
 			ebullet := levelClass.enemies[e].Fire() // Will return nil if they can't fire yet.
 			if ebullet != nil {
@@ -144,13 +139,17 @@ func (levelClass *Level) Update() error {
 				levelClass.EnemyBullets = append(levelClass.EnemyBullets, ebullet)
 			}
 		}
+
+		//Move Enemey
+		levelClass.enemies[e].Update()
 	}
 
+	//Play Bullets
 	for i := 0; i < len(levelClass.playerBullets); i++ {
 		levelClass.playerBullets[i].Ypos -= 10
 		removeBullet := false
 
-		//EnemyExplosion
+		//Check Collision
 		for e := 0; e < len(levelClass.enemies); e++ {
 			//Check to see if any bullets hit any of the enemies.
 			if levelClass.enemies != nil && helpers.DistanceBetween(levelClass.enemies[e].GetPosX()+float64(levelClass.enemies[e].GetWidth()/2), levelClass.enemies[e].GetPosY(), levelClass.playerBullets[i].Xpos, levelClass.playerBullets[i].Ypos) <= 50 {
@@ -162,7 +161,6 @@ func (levelClass *Level) Update() error {
 					levelClass.fxPlayer.Rewind()
 					levelClass.fxPlayer.Play()
 				}
-
 				break
 			}
 
@@ -185,10 +183,11 @@ func (levelClass *Level) Update() error {
 		}
 	}
 
+	//Enemy Bullets
 	for i := 0; i < len(levelClass.EnemyBullets); i++ {
 		levelClass.EnemyBullets[i].Ypos += 10
 
-		if helpers.DistanceBetween(PLAYER.XPos+float64(PLAYER.Ship.CurrentShipWidth/2), PLAYER.YPos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 30 {
+		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 50 {
 			PLAYER.IsDead = true
 			systems.SCENEMANAGER.Push(NewGameOver())
 			levelClass.soundEffectPlayerDeath.Rewind()
@@ -202,7 +201,6 @@ func (levelClass *Level) Update() error {
 	}
 
 	//Create New WeakEnemy
-	//Replace With factory
 	if time.Now().Sub(LAST_SPAWN_TIME).Seconds() > 2 {
 		s1 := rand.NewSource(time.Now().UnixNano())
 		r1 := rand.New(s1)
@@ -212,17 +210,6 @@ func (levelClass *Level) Update() error {
 		levelClass.enemies = append(levelClass.enemies, newEnemey)
 
 		LAST_SPAWN_TIME = time.Now()
-	}
-
-	//WeakEnemy Movement
-	for e := 0; e < len(levelClass.enemies); e++ {
-		currentLocationY := levelClass.enemies[e].GetPosY()
-		levelClass.enemies[e].SetPosY(currentLocationY + 5)
-
-		//Moves the WeakEnemy Back To the Top of the screen
-		if levelClass.enemies[e].GetPosY() > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
-			levelClass.enemies[e].SetPosY(0)
-		}
 	}
 
 	//INPUTs
