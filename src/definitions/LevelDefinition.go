@@ -2,7 +2,6 @@ package definitions
 
 import (
 	"SpaceShooter/assets"
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -54,7 +53,6 @@ type BackgroundMusic struct {
 }
 
 func openImage(location string) *ebiten.Image {
-	fmt.Println(location)
 	fs, _ := assets.AssetsFileSystem.Open(location)
 	img, _, err := ebitenutil.NewImageFromReader(fs)
 	if err != nil {

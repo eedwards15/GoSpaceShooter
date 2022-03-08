@@ -10,7 +10,6 @@ import (
 
 func AssetConfigHelper() ([]*definitions.AssetConfig, error) {
 	files, err := assets.AssetsFileSystem.ReadDir("configs")
-	println(len(files))
 	if err != nil {
 		log.Fatal(err)
 	}
