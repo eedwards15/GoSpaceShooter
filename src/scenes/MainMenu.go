@@ -1,7 +1,7 @@
 package scenes
 
 import (
-	"SpaceShooter/src/helpers"
+	"SpaceShooter/assets"
 	"SpaceShooter/src/systems"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
@@ -40,7 +40,9 @@ func NewMainMenu() *MainMenu {
 func (mainMenuClass *MainMenu) Init() {
 	mainMenuClass.SCENENAME = "MainMenu"
 	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[mainMenuClass.SCENENAME].BackgroundMusic).PlaySong()
-	tt, err := opentype.Parse(*helpers.LoadFile("./assets/fonts/arcades/Arcades.ttf"))
+
+	f, _ := assets.AssetsFileSystem.ReadFile("fonts/arcades/Arcades.ttf")
+	tt, err := opentype.Parse(f)
 	if err != nil {
 		log.Fatal(err)
 	}

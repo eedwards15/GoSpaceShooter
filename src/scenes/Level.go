@@ -1,6 +1,7 @@
 package scenes
 
 import (
+	"SpaceShooter/assets"
 	"SpaceShooter/src/helpers"
 	"SpaceShooter/src/npcs"
 	"SpaceShooter/src/player"
@@ -64,8 +65,8 @@ func (levelClass *Level) Init() {
 
 	levelClass.enemies = append(levelClass.enemies, npcs.NewWeakEnemy(float64(systems.WINDOWMANAGER.SCREENWIDTH/2), 0))
 	levelClass.soundEffectPlayer, _ = audio.CurrentContext().NewPlayer(PLAYER.Ship.FireSound)
-
-	tt, err := opentype.Parse(*helpers.LoadFile("assets/fonts/arcades/Arcades.ttf"))
+	f, _ := assets.AssetsFileSystem.ReadFile("fonts/arcades/Arcades.ttf")
+	tt, err := opentype.Parse(f)
 	if err != nil {
 		log.Fatal(err)
 	}
