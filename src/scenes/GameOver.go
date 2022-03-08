@@ -11,6 +11,7 @@ import (
 	"golang.org/x/image/font/opentype"
 	"image/color"
 	"log"
+	"strconv"
 )
 
 type GameOver struct {
@@ -53,6 +54,7 @@ func (gameOverClass *GameOver) Draw(screen *ebiten.Image) {
 	}
 	text.Draw(screen, "Game Over", gameOverClass.titleArcadeFont, (systems.WINDOWMANAGER.SCREENWIDTH/2)-(len(titleText)/2)*fontSize, (systems.WINDOWMANAGER.SCREENHEIGHT / 2), color.White)
 	text.Draw(screen, instructions, gameOverClass.titleArcadeFont, (systems.WINDOWMANAGER.SCREENWIDTH/2)-(len(instructions)/2)*fontSize, (systems.WINDOWMANAGER.SCREENHEIGHT/2)+fontSize*3, color.White)
+	text.Draw(screen, "Your Score: "+strconv.Itoa(SCORE), gameOverClass.titleArcadeFont, (systems.WINDOWMANAGER.SCREENWIDTH/2)-(len(instructions)/2)*fontSize, (systems.WINDOWMANAGER.SCREENHEIGHT/2)+fontSize*5, color.White)
 
 }
 
