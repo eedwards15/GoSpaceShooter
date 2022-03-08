@@ -13,12 +13,12 @@
     },
     {
       "Key" : "WeakEnemy",
-      "location" : "/art/enemies/",
+      "location" : "art/enemies/",
       "FileName": "enemyBlack1.png"
     },
     {
       "Key" : "MidRankEnemy",
-      "location" : "/art/enemies/",
+      "location" : "art/enemies/",
       "FileName": "enemyBlack5.png"
     },
     {
@@ -46,6 +46,6 @@
       "FileName": "515005__matrixxx__retro-space-explosion.mp3",
       "SampleRate": 44100
     }
-    
+
   ]
 }

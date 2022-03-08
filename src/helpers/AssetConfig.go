@@ -1,17 +1,16 @@
 package helpers
 
 import (
+	"SpaceShooter/assets"
 	"SpaceShooter/src/definitions"
 	"encoding/json"
-	"io/ioutil"
 	"log"
-	"os"
 	"path"
 )
 
 func AssetConfigHelper() ([]*definitions.AssetConfig, error) {
-	staticPath := "assets/configs"
-	files, err := ioutil.ReadDir(staticPath)
+	files, err := assets.AssetsFileSystem.ReadDir("configs")
+	println(len(files))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,7 +21,8 @@ func AssetConfigHelper() ([]*definitions.AssetConfig, error) {
 		if file.IsDir() {
 			continue
 		}
-		fileValue, _ := os.ReadFile(path.Join(staticPath, file.Name()))
+
+		fileValue, _ := assets.AssetsFileSystem.ReadFile(path.Join("configs", file.Name()))
 		assetConfig := definitions.AssetConfig{}
 		json.Unmarshal(fileValue, &assetConfig)
 		assetConfigs = append(assetConfigs, &assetConfig)

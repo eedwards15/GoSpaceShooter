@@ -1,7 +1,7 @@
 {
   "Scene": "Level 1",
   "BackgroundMusic": {
-    "Path": "assets/music/416984__soundflakes__desolated-field.mp3",
+    "Path": "music/416984__soundflakes__desolated-field.mp3",
     "SampleRate": 44100
   },
   "Images": [
