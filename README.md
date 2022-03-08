@@ -1,3 +1,6 @@
+<img src="ScreenShot.png">
+
+
 ## ART: 
 1. Kenny - https://www.kenney.nl/assets/space-shooter-redux
 2. Vergil1018 - https://opengameart.org/content/spaceship-bullet
