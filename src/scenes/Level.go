@@ -17,7 +17,6 @@ import (
 	"image/color"
 	_ "image/png"
 	"log"
-	"math/rand"
 	"strconv"
 	"time"
 )
@@ -35,6 +34,7 @@ type Level struct {
 	SCENENAME              string
 	fxPlayer               *audio.Player
 	LIFEICONSCALE          float64
+	enemySpawner           *npcs.EnemySpawner
 }
 
 var (
@@ -80,6 +80,7 @@ func (levelClass *Level) Init() {
 		Hinting: font.HintingFull,
 	})
 	levelClass.LIFEICONSCALE = 50 / PLAYER.Ship.CurrentShipWidth
+	levelClass.enemySpawner = npcs.NewEnemySpawner()
 }
 
 func (levelClass *Level) GetName() string {
@@ -217,16 +218,9 @@ func (levelClass *Level) Update() error {
 		}
 	}
 
-	//Create New WeakEnemy
-	if time.Now().Sub(LAST_SPAWN_TIME).Seconds() > 2 {
-		s1 := rand.NewSource(time.Now().UnixNano())
-		r1 := rand.New(s1)
-		x := r1.Intn(systems.WINDOWMANAGER.SCREENWIDTH - 100)
-
-		newEnemey := npcs.SpawnNewEnemy(float64(x), 0)
+	newEnemey := levelClass.enemySpawner.SpawnNewEnemy()
+	if newEnemey != nil {
 		levelClass.enemies = append(levelClass.enemies, newEnemey)
-
-		LAST_SPAWN_TIME = time.Now()
 	}
 
 	//INPUTs

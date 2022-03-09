@@ -17,7 +17,22 @@
       "FileName": "enemyBlack1.png"
     },
     {
+      "Key" : "Level2Enemy",
+      "location" : "art/enemies/",
+      "FileName": "enemyBlack2.png"
+    },
+    {
       "Key" : "MidRankEnemy",
+      "location" : "art/enemies/",
+      "FileName": "enemyBlack3.png"
+    },
+    {
+      "Key" : "Level3Enemy",
+      "location" : "art/enemies/",
+      "FileName": "enemyBlack4.png"
+    },
+    {
+      "Key" : "Level5Enemy",
       "location" : "art/enemies/",
       "FileName": "enemyBlack5.png"
     },

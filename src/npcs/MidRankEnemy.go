@@ -20,15 +20,6 @@ type MidRankEnemy struct {
 	lastFire    time.Time
 }
 
-func (e *MidRankEnemy) Fire() *weapons.Bullet {
-	if time.Now().Sub(e.lastFire).Milliseconds() > 800 {
-		b := weapons.NewBullet(systems.ASSETSYSTEM.Assets["Global"].Images["LaserRed"])
-		e.lastFire = time.Now()
-		return b
-	}
-	return nil
-}
-
 func NewMidRankEnemy(x, y float64) IEnemy {
 	img := systems.ASSETSYSTEM.Assets["Global"].Images["MidRankEnemy"]
 	w, h := img.Size()
@@ -46,6 +37,15 @@ func NewMidRankEnemy(x, y float64) IEnemy {
 	}
 
 	return e
+}
+
+func (e *MidRankEnemy) Fire() *weapons.Bullet {
+	if time.Now().Sub(e.lastFire).Milliseconds() > 1500 {
+		b := weapons.NewBullet(systems.ASSETSYSTEM.Assets["Global"].Images["LaserRed"])
+		e.lastFire = time.Now()
+		return b
+	}
+	return nil
 }
 
 func (e *MidRankEnemy) Update() {

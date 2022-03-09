@@ -1,16 +1,16 @@
 <img src="ScreenShot.png">
 
-#Release 
-
+#Release
 1.1 Multiple lives. 
-
+1.2 More Enemies
+1.3 Updated Enemy Spawner 
 
 ## ART: 
 1. Kenny - https://www.kenney.nl/assets/space-shooter-redux
 2. Vergil1018 - https://opengameart.org/content/spaceship-bullet
 
 
-## Music / Sound Effects. 
+## Music/Sound Effects. 
 1. levelclearer - https://freesound.org/people/levelclearer/sounds/263478/
 2. SoundFlakes - https://freesound.org/people/SoundFlakes/sounds/416984/
 3. Bertsz - https://freesound.org/people/Bertsz/sounds/545452/

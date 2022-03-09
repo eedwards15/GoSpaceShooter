@@ -1,17 +1,65 @@
 package npcs
 
 import (
+	"SpaceShooter/src/systems"
+	"SpaceShooter/src/weapons"
 	"github.com/hajimehoshi/ebiten/v2"
+	"time"
 )
 
 type EnemyBase struct {
-	posX     float64
-	posY     float64
-	image    *ebiten.Image
-	isDead   bool
-	width    int
-	height   int
-	canShoot bool
+	posX          float64
+	posY          float64
+	image         *ebiten.Image
+	isDead        bool
+	width         int
+	height        int
+	canShoot      bool
+	life          int
+	scoreAmount   int
+	lastFire      time.Time
+	fireSpeed     int64
+	movementSpeed float64
+}
+
+func (e *EnemyBase) TakeDamage() {
+	e.life = e.life - 1
+
+	if e.life <= 0 {
+		e.isDead = true
+	}
+}
+
+func (e *EnemyBase) GetScoreAmount() int {
+	return e.scoreAmount
+}
+
+func (e *EnemyBase) Fire() *weapons.Bullet {
+	if e.fireSpeed == 0 {
+		return nil
+	}
+
+	if time.Now().Sub(e.lastFire).Milliseconds() > e.fireSpeed {
+		b := weapons.NewBullet(systems.ASSETSYSTEM.Assets["Global"].Images["LaserRed"])
+		e.lastFire = time.Now()
+		return b
+	}
+
+	return nil
+}
+
+func (e *EnemyBase) Draw(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(e.posX, e.posY)
+	screen.DrawImage(e.image, op)
+}
+
+func (e *EnemyBase) Update() {
+	e.posY += e.movementSpeed
+	//Moves the WeakEnemy Back To the Top of the screen
+	if e.posY > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
+		e.posY = 0
+	}
 }
 
 func (e *EnemyBase) SetPosX(x float64) {
@@ -53,16 +101,3 @@ func (e EnemyBase) GetHeight() int {
 func (e EnemyBase) CanShoot() bool {
 	return e.canShoot
 }
-
-//
-//func NewEnemy(x, y float64) *WeakEnemy {
-//	e := WeakEnemy{}
-//	e.Dead = false
-//	e.Image = systems.ASSETSYSTEM.Assets["Global"].Images["WeakEnemy"]
-//	w, h := e.Image.Size()
-//	e.Width = w
-//	e.Height = h
-//	e.PosX = x
-//	e.PosY = y
-//	return &e
-//}
