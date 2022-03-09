@@ -34,6 +34,7 @@ type Level struct {
 	EnemyBullets           []*weapons.Bullet
 	SCENENAME              string
 	fxPlayer               *audio.Player
+	LIFEICONSCALE          float64
 }
 
 var (
@@ -45,6 +46,7 @@ var (
 )
 
 func (levelClass *Level) Init() {
+
 	levelClass.enemies = []npcs.IEnemy{}
 	levelClass.SCENENAME = "Level 1"
 	levelClass.playerBullets = []*weapons.Bullet{}
@@ -77,7 +79,7 @@ func (levelClass *Level) Init() {
 		DPI:     dpi,
 		Hinting: font.HintingFull,
 	})
-
+	levelClass.LIFEICONSCALE = 50 / PLAYER.Ship.CurrentShipWidth
 }
 
 func (levelClass *Level) GetName() string {
@@ -110,6 +112,13 @@ func (levelClass *Level) Draw(screen *ebiten.Image) {
 
 	text.Draw(screen, "Score: "+strconv.Itoa(SCORE), TITLE_ARCADE_FONT, 20, 20, color.White)
 
+	for i := 0; i < PLAYER.Life; i++ {
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Scale(levelClass.LIFEICONSCALE, levelClass.LIFEICONSCALE)
+		op.GeoM.Translate(float64(50*i)+20, 50)
+		screen.DrawImage(PLAYER.Ship.CurrentShipImage, op)
+	}
+
 	//ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
 }
 func RemoveIndex(s []*weapons.Bullet, index int) []*weapons.Bullet {
@@ -124,11 +133,15 @@ func (levelClass *Level) Update() error {
 	for e := 0; e < len(levelClass.enemies); e++ {
 		//Check for collision with player.
 		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.enemies[e].GetPosX(), levelClass.enemies[e].GetPosY()) <= 50 {
-			PLAYER.IsDead = true
-			systems.SCENEMANAGER.Push(NewGameOver())
-			levelClass.soundEffectPlayerDeath.Rewind()
-			levelClass.soundEffectPlayerDeath.Play()
-			return nil
+
+			PLAYER.TakeDamage()
+
+			if PLAYER.IsDead {
+				systems.SCENEMANAGER.Push(NewGameOver())
+				levelClass.soundEffectPlayerDeath.Rewind()
+				levelClass.soundEffectPlayerDeath.Play()
+				return nil
+			}
 		}
 
 		//Fires Weapon If Enemy is alive.
@@ -188,12 +201,15 @@ func (levelClass *Level) Update() error {
 	for i := 0; i < len(levelClass.EnemyBullets); i++ {
 		levelClass.EnemyBullets[i].Ypos += 10
 
-		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 50 {
-			PLAYER.IsDead = true
-			systems.SCENEMANAGER.Push(NewGameOver())
-			levelClass.soundEffectPlayerDeath.Rewind()
-			levelClass.soundEffectPlayerDeath.Play()
-			return nil
+		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 40 {
+
+			PLAYER.TakeDamage()
+			if PLAYER.IsDead {
+				systems.SCENEMANAGER.Push(NewGameOver())
+				levelClass.soundEffectPlayerDeath.Rewind()
+				levelClass.soundEffectPlayerDeath.Play()
+				return nil
+			}
 		}
 
 		if len(levelClass.EnemyBullets) > 0 && levelClass.EnemyBullets[i].Ypos > float64(systems.WINDOWMANAGER.SCREENHEIGHT) {
