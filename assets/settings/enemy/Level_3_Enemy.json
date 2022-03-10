@@ -1,0 +1,16 @@
+{
+  "Key": "Level3",
+  "Chance": 80,
+  "CoolDown": 3,
+  "Assets": [
+    {
+      "LocationKey": "Global",
+      "ImageKey": "Level3Enemy"
+    }
+  ],
+  "CanShoot": false,
+  "Life" : 1,
+  "ScoreAmount": 100,
+  "FireRate": 1000,
+  "MovementSpeed": 2
+}

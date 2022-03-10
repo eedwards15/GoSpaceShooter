@@ -1,12 +1,18 @@
 package npcs
 
 import (
+	"SpaceShooter/assets"
+	"SpaceShooter/src/definitions"
 	"SpaceShooter/src/systems"
+	"encoding/json"
+	"fmt"
 	"math/rand"
+	"path"
 	"time"
 )
 
 type EnemySpawner struct {
+	enemyConfigs    []definitions.EnemyConfig
 	LAST_SPAWN_TIME time.Time
 	coolDown        float64
 }
@@ -15,6 +21,16 @@ func NewEnemySpawner() *EnemySpawner {
 	eS := &EnemySpawner{}
 	eS.LAST_SPAWN_TIME = time.Now()
 	eS.coolDown = 2
+	configs, _ := assets.AssetsFileSystem.ReadDir("settings/enemy")
+
+	for i := 0; i < len(configs); i++ {
+		fileValue, _ := assets.AssetsFileSystem.ReadFile(path.Join("settings/enemy", configs[i].Name()))
+
+		enemyConfig := definitions.EnemyConfig{}
+		json.Unmarshal(fileValue, &enemyConfig)
+		fmt.Println(enemyConfig)
+		eS.enemyConfigs = append(eS.enemyConfigs, enemyConfig)
+	}
 	return eS
 }
 
@@ -28,34 +44,11 @@ func (enemySpawner *EnemySpawner) SpawnNewEnemy() IEnemy {
 
 		s2 := rand.NewSource(time.Now().UnixNano())
 		r2 := rand.New(s2)
-		x := r2.Intn(101)
+		x := r2.Intn(len(enemySpawner.enemyConfigs))
 
-		if x < 5 {
-			enemySpawner.coolDown = 4
-			return NewLevel5Enemy(xPos, yPos)
-		}
-
-		if x < 10 {
-			enemySpawner.coolDown = 3
-			return NewMidRankEnemy(xPos, yPos)
-
-		}
-
-		if x < 30 {
-			enemySpawner.coolDown = 1
-			return NewWeakEnemy(xPos, yPos)
-		}
-
-		if x < 40 {
-			enemySpawner.coolDown = 2
-			return NewLevel2Enemy(xPos, yPos)
-
-		}
-
-		if x < 50 {
-			enemySpawner.coolDown = 3
-			return NewLevel3Enemy(xPos, yPos)
-		}
+		enemySpawner.coolDown = enemySpawner.enemyConfigs[x].CoolDown
+		e := NewEnemy(xPos, yPos, enemySpawner.enemyConfigs[x])
+		return e
 
 	}
 	return nil

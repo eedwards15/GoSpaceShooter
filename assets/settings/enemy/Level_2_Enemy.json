@@ -1,0 +1,16 @@
+{
+  "Key": "Level2",
+  "Chance": 80,
+  "CoolDown": 2,
+  "Assets": [
+    {
+      "LocationKey": "Global",
+      "ImageKey": "Level2Enemy"
+    }
+  ],
+  "CanShoot": true,
+  "Life" : 2,
+  "ScoreAmount": 20,
+  "FireRate": 2000,
+  "MovementSpeed": 4
+}

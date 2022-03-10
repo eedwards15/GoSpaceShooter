@@ -65,7 +65,6 @@ func (levelClass *Level) Init() {
 	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[levelClass.SCENENAME].BackgroundMusic).PlaySong()
 	PLAYER.Ship.SelectShip(1, 2)
 
-	levelClass.enemies = append(levelClass.enemies, npcs.NewWeakEnemy(float64(systems.WINDOWMANAGER.SCREENWIDTH/2), 0))
 	levelClass.soundEffectPlayer, _ = audio.CurrentContext().NewPlayer(PLAYER.Ship.FireSound)
 	f, _ := assets.AssetsFileSystem.ReadFile("fonts/arcades/Arcades.ttf")
 	tt, err := opentype.Parse(f)
