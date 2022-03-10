@@ -1,8 +1,13 @@
 <img src="ScreenShot.png">
 
-#Release 
+#Release
 
-1.1 Multiple lives. 
+| Version | Description                               |
+|---------|:------------------------------------------|
+| 1.1     | Multiple Lives added                      |
+| 1.2     | Added More Enemy Options                  | 
+| 1.3     | Updated Enemy Spawner                     | 
+| 2.0     | Moved the enemy definitions to json files | 
 
 
 ## ART: 
@@ -10,7 +15,7 @@
 2. Vergil1018 - https://opengameart.org/content/spaceship-bullet
 
 
-## Music / Sound Effects. 
+## Music/Sound Effects. 
 1. levelclearer - https://freesound.org/people/levelclearer/sounds/263478/
 2. SoundFlakes - https://freesound.org/people/SoundFlakes/sounds/416984/
 3. Bertsz - https://freesound.org/people/Bertsz/sounds/545452/

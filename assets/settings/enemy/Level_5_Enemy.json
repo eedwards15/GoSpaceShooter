@@ -1,0 +1,16 @@
+{
+  "Key": "Level5",
+  "Chance": 80,
+  "CoolDown":3,
+  "Assets": [
+    {
+      "LocationKey": "Global",
+      "ImageKey": "Level5Enemy"
+    }
+  ],
+  "CanShoot": true,
+  "Life" : 6,
+  "ScoreAmount": 600,
+  "FireRate": 1400,
+  "MovementSpeed": 5
+}

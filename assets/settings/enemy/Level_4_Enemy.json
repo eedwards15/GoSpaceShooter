@@ -1,0 +1,16 @@
+{
+  "Key": "Level4",
+  "Chance": 80,
+  "CoolDown":3,
+  "Assets": [
+    {
+      "LocationKey": "Global",
+      "ImageKey": "MidRankEnemy"
+    }
+  ],
+  "CanShoot": true,
+  "Life" : 3,
+  "ScoreAmount": 120,
+  "FireRate": 1500,
+  "MovementSpeed": 5
+}
