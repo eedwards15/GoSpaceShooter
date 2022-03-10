@@ -1,0 +1,16 @@
+{
+  "Key": "Level3Red",
+  "Chance": 80,
+  "CoolDown": 4,
+  "Assets": [
+    {
+      "LocationKey": "Global",
+      "ImageKey": "Level3_Red"
+    }
+  ],
+  "CanShoot": true,
+  "Life" : 3,
+  "ScoreAmount": 100,
+  "FireRate": 1800,
+  "MovementSpeed": 6
+}

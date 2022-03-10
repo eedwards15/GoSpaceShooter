@@ -32,6 +32,56 @@
       "FileName": "enemyBlack4.png"
     },
     {
+      "Key" : "Level1_Blue",
+      "location" : "art/enemies/",
+      "FileName": "enemyBlue1.png"
+    },
+    {
+      "Key" : "Level2_Blue",
+      "location" : "art/enemies/",
+      "FileName": "enemyBlue2.png"
+    },
+    {
+      "Key" : "Level3_Blue",
+      "location" : "art/enemies/",
+      "FileName": "enemyBlue3.png"
+    },
+    {
+      "Key" : "Level4_Blue",
+      "location" : "art/enemies/",
+      "FileName": "enemyBlue4.png"
+    },
+    {
+      "Key" : "Level5_Blue",
+      "location" : "art/enemies/",
+      "FileName": "enemyBlue5.png"
+    },
+    {
+      "Key" : "Level1_Red",
+      "location" : "art/enemies/",
+      "FileName": "enemyRed1.png"
+    },
+    {
+      "Key" : "Level2_Red",
+      "location" : "art/enemies/",
+      "FileName": "enemyRed2.png"
+    },
+    {
+      "Key" : "Level3_Red",
+      "location" : "art/enemies/",
+      "FileName": "enemyRed3.png"
+    },
+    {
+      "Key" : "Level4_Red",
+      "location" : "art/enemies/",
+      "FileName": "enemyRed4.png"
+    },
+    {
+      "Key" : "Level5_Red",
+      "location" : "art/enemies/",
+      "FileName": "enemyRed5.png"
+    },
+    {
       "Key" : "Level5Enemy",
       "location" : "art/enemies/",
       "FileName": "enemyBlack5.png"

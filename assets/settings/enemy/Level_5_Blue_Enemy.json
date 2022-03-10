@@ -1,0 +1,16 @@
+{
+  "Key": "Level5Blue",
+  "Chance": 80,
+  "CoolDown": 3,
+  "Assets": [
+    {
+      "LocationKey": "Global",
+      "ImageKey": "Level5_Blue"
+    }
+  ],
+  "CanShoot": true,
+  "Life" : 6,
+  "ScoreAmount": 200,
+  "FireRate": 1400,
+  "MovementSpeed": 4
+}

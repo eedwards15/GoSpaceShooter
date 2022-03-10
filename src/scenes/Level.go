@@ -201,7 +201,7 @@ func (levelClass *Level) Update() error {
 	for i := 0; i < len(levelClass.EnemyBullets); i++ {
 		levelClass.EnemyBullets[i].Ypos += 10
 
-		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 40 {
+		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 50 {
 
 			PLAYER.TakeDamage()
 			if PLAYER.IsDead {
