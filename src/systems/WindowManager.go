@@ -9,12 +9,14 @@ type WindowManager struct {
 	SCREENHEIGHT int
 }
 
-func NewWindowManager(width int, height int) *WindowManager {
-	windowManger := WindowManager{
-		SCREENWIDTH:  width,
-		SCREENHEIGHT: height,
+func InitWindowManager(width int, height int) {
+	if WINDOWMANAGER == nil {
+		windowManger := &WindowManager{
+			SCREENWIDTH:  width,
+			SCREENHEIGHT: height,
+		}
+		WINDOWMANAGER = windowManger
 	}
-	return &windowManger
 }
 
 func (windowManagerClass WindowManager) Center() (float64, float64) {

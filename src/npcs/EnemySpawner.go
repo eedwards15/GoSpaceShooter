@@ -11,17 +11,16 @@ import (
 )
 
 type EnemySpawner struct {
-	enemyConfigs    []definitions.EnemyConfig
-	LAST_SPAWN_TIME time.Time
-	coolDown        float64
+	enemyConfigs  []definitions.EnemyConfig
+	LastSpawnTime time.Time
+	coolDown      float64
 }
 
 func NewEnemySpawner() *EnemySpawner {
 	eS := &EnemySpawner{}
-	eS.LAST_SPAWN_TIME = time.Now()
+	eS.LastSpawnTime = time.Now()
 	eS.coolDown = 2
 	configs, _ := assets.AssetsFileSystem.ReadDir("settings/enemy")
-
 	for i := 0; i < len(configs); i++ {
 		fileValue, _ := assets.AssetsFileSystem.ReadFile(path.Join("settings/enemy", configs[i].Name()))
 		enemyConfig := definitions.EnemyConfig{}
@@ -32,8 +31,8 @@ func NewEnemySpawner() *EnemySpawner {
 }
 
 func (enemySpawner *EnemySpawner) SpawnNewEnemy() IEnemy {
-	if time.Now().Sub(enemySpawner.LAST_SPAWN_TIME).Seconds() > enemySpawner.coolDown {
-		enemySpawner.LAST_SPAWN_TIME = time.Now()
+	if time.Now().Sub(enemySpawner.LastSpawnTime).Seconds() > enemySpawner.coolDown {
+		enemySpawner.LastSpawnTime = time.Now()
 		s1 := rand.NewSource(time.Now().UnixNano())
 		r1 := rand.New(s1)
 		xPos := float64(r1.Intn(systems.WINDOWMANAGER.SCREENWIDTH - 100))

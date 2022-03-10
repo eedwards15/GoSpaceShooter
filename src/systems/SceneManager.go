@@ -11,10 +11,12 @@ type SceneManager struct {
 	CurrentScene interfaces.IScene
 }
 
-func NewSceneManager() *SceneManager {
-	g := &SceneManager{}
-	g.allScenese = make([]interfaces.IScene, 0)
-	return g
+func InitSceneManager() {
+	if SCENEMANAGER == nil {
+		g := &SceneManager{}
+		g.allScenese = make([]interfaces.IScene, 0)
+		SCENEMANAGER = g
+	}
 }
 
 func (s *SceneManager) setScene() {

@@ -7,7 +7,8 @@
 | 1.1     | Multiple Lives added                      |
 | 1.2     | Added More Enemy Options                  | 
 | 1.3     | Updated Enemy Spawner                     | 
-| 2.0     | Moved the enemy definitions to json files | 
+| 2.0     | Moved the enemy definitions to json files |     
+| 2.1     | Refactoring                               |
 
 
 ## ART: 
