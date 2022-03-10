@@ -1,9 +1,14 @@
 <img src="ScreenShot.png">
 
 #Release
-1.1 Multiple lives. 
-1.2 More Enemies
-1.3 Updated Enemy Spawner 
+
+| Version | Description                               |
+|---------|:------------------------------------------|
+| 1.1     | Multiple Lives added                      |
+| 1.2     | Added More Enemy Options                  | 
+| 1.3     | Updated Enemy Spawner                     | 
+| 2.0     | Moved the enemy definitions to json files | 
+
 
 ## ART: 
 1. Kenny - https://www.kenney.nl/assets/space-shooter-redux
