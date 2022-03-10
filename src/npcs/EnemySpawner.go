@@ -5,7 +5,6 @@ import (
 	"SpaceShooter/src/definitions"
 	"SpaceShooter/src/systems"
 	"encoding/json"
-	"fmt"
 	"math/rand"
 	"path"
 	"time"
@@ -25,10 +24,8 @@ func NewEnemySpawner() *EnemySpawner {
 
 	for i := 0; i < len(configs); i++ {
 		fileValue, _ := assets.AssetsFileSystem.ReadFile(path.Join("settings/enemy", configs[i].Name()))
-
 		enemyConfig := definitions.EnemyConfig{}
 		json.Unmarshal(fileValue, &enemyConfig)
-		fmt.Println(enemyConfig)
 		eS.enemyConfigs = append(eS.enemyConfigs, enemyConfig)
 	}
 	return eS
