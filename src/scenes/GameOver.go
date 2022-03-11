@@ -2,6 +2,7 @@ package scenes
 
 import (
 	"SpaceShooter/assets"
+	"SpaceShooter/src/helpers"
 	"SpaceShooter/src/systems"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
@@ -41,7 +42,7 @@ func (gameOverClass *GameOver) Init() {
 
 	const dpi = 72
 	gameOverClass.titleArcadeFont, err = opentype.NewFace(tt, &opentype.FaceOptions{
-		Size:    titleFontSize,
+		Size:    50,
 		DPI:     dpi,
 		Hinting: font.HintingFull,
 	})
@@ -52,10 +53,9 @@ func (gameOverClass *GameOver) Draw(screen *ebiten.Image) {
 	if gameOverClass.titleArcadeFont == nil {
 		return
 	}
-	text.Draw(screen, "Game Over", gameOverClass.titleArcadeFont, (systems.WINDOWMANAGER.SCREENWIDTH/2)-(len(titleText)/2)*fontSize, (systems.WINDOWMANAGER.SCREENHEIGHT / 2), color.White)
-	text.Draw(screen, instructions, gameOverClass.titleArcadeFont, (systems.WINDOWMANAGER.SCREENWIDTH/2)-(len(instructions)/2)*fontSize, (systems.WINDOWMANAGER.SCREENHEIGHT/2)+fontSize*3, color.White)
-	text.Draw(screen, "Your Score: "+strconv.Itoa(SCORE), gameOverClass.titleArcadeFont, (systems.WINDOWMANAGER.SCREENWIDTH/2)-(len(instructions)/2)*fontSize, (systems.WINDOWMANAGER.SCREENHEIGHT/2)+fontSize*5, color.White)
-
+	text.Draw(screen, "Your Score: "+strconv.Itoa(SCORE), gameOverClass.titleArcadeFont, helpers.CenterTextXPos("Your Score: "+strconv.Itoa(SCORE), gameOverClass.titleArcadeFont, systems.WINDOWMANAGER.SCREENWIDTH), 150, color.White)
+	text.Draw(screen, "Game Over", gameOverClass.titleArcadeFont, helpers.CenterTextXPos("Game Over", gameOverClass.titleArcadeFont, systems.WINDOWMANAGER.SCREENWIDTH), 350, color.White)
+	text.Draw(screen, instructions, gameOverClass.titleArcadeFont, helpers.CenterTextXPos(instructions, gameOverClass.titleArcadeFont, systems.WINDOWMANAGER.SCREENWIDTH), 550, color.White)
 }
 
 func (gameOverClass *GameOver) Update() error {

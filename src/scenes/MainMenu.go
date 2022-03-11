@@ -1,6 +1,7 @@
 package scenes
 
 import (
+	"SpaceShooter/src/helpers"
 	"SpaceShooter/src/systems"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
@@ -24,7 +25,7 @@ func (mainMenuClass *MainMenu) GetName() string {
 const (
 	tileSize      = 32
 	titleFontSize = fontSize * 1.5
-	fontSize      = 24
+	fontSize      = 100
 	titleText     = "Space Shooter"
 	instructions  = "Press Enter To Play"
 )
@@ -39,7 +40,7 @@ func (mainMenuClass *MainMenu) Init() {
 	mainMenuClass.SCENENAME = "MainMenu"
 	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[mainMenuClass.SCENENAME].BackgroundMusic).PlaySong()
 	mainMenuClass.titleArcadeFont, _ = opentype.NewFace(systems.ASSETSYSTEM.Assets["Global"].Fonts["Arcades"], &opentype.FaceOptions{
-		Size:    titleFontSize,
+		Size:    100,
 		DPI:     72,
 		Hinting: font.HintingFull,
 	})
@@ -50,8 +51,15 @@ func (mainMenuClass *MainMenu) Draw(screen *ebiten.Image) {
 	if mainMenuClass.titleArcadeFont == nil {
 		return
 	}
-	text.Draw(screen, titleText, mainMenuClass.titleArcadeFont, (systems.WINDOWMANAGER.SCREENWIDTH/2)-(len(titleText)/2)*fontSize, (systems.WINDOWMANAGER.SCREENHEIGHT / 2), color.White)
-	text.Draw(screen, instructions, mainMenuClass.titleArcadeFont, (systems.WINDOWMANAGER.SCREENWIDTH/2)-(len(instructions)/2)*fontSize, (systems.WINDOWMANAGER.SCREENHEIGHT/2)+fontSize*3, color.White)
+	backgroundOP := &ebiten.DrawImageOptions{}
+	backgroundOP.GeoM.Scale(2, 2)
+	screen.DrawImage(systems.ASSETSYSTEM.Assets["Level 1"].Images["Background"], backgroundOP)
+
+	text.Draw(screen, titleText, mainMenuClass.titleArcadeFont, helpers.CenterTextXPos(titleText, mainMenuClass.titleArcadeFont, systems.WINDOWMANAGER.SCREENWIDTH), 200, color.White)
+
+	text.Draw(screen, "Play", mainMenuClass.titleArcadeFont, helpers.CenterTextXPos("Play", mainMenuClass.titleArcadeFont, systems.WINDOWMANAGER.SCREENWIDTH), 400, color.White)
+
+	text.Draw(screen, "Exit", mainMenuClass.titleArcadeFont, helpers.CenterTextXPos("Exit", mainMenuClass.titleArcadeFont, systems.WINDOWMANAGER.SCREENWIDTH), 600, color.White)
 
 }
 
