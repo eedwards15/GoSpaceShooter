@@ -62,5 +62,12 @@
       "SampleRate": 44100
     }
 
+  ],
+  "Fonts" : [
+    {
+      "Key" : "Arcades",
+      "location": "fonts/arcades",
+      "FileName": "Arcades.ttf"
+    }
   ]
 }

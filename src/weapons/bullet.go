@@ -1,13 +1,15 @@
 package weapons
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"SpaceShooter/src/models"
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 type Bullet struct {
-	Xpos   float64
-	Ypos   float64
 	Width  float64
 	Height float64
 	Sprite *ebiten.Image
+	models.Vector2
 }
 
 func NewBullet(sprite *ebiten.Image) *Bullet {

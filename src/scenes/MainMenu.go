@@ -1,7 +1,6 @@
 package scenes
 
 import (
-	"SpaceShooter/assets"
 	"SpaceShooter/src/systems"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/keyboard/keyboard"
@@ -10,7 +9,6 @@ import (
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
 	"image/color"
-	"log"
 )
 
 type MainMenu struct {
@@ -40,17 +38,9 @@ func NewMainMenu() *MainMenu {
 func (mainMenuClass *MainMenu) Init() {
 	mainMenuClass.SCENENAME = "MainMenu"
 	systems.MUSICSYSTEM.LoadSong(systems.ASSETSYSTEM.Assets[mainMenuClass.SCENENAME].BackgroundMusic).PlaySong()
-
-	f, _ := assets.AssetsFileSystem.ReadFile("fonts/arcades/Arcades.ttf")
-	tt, err := opentype.Parse(f)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	const dpi = 72
-	mainMenuClass.titleArcadeFont, err = opentype.NewFace(tt, &opentype.FaceOptions{
+	mainMenuClass.titleArcadeFont, _ = opentype.NewFace(systems.ASSETSYSTEM.Assets["Global"].Fonts["Arcades"], &opentype.FaceOptions{
 		Size:    titleFontSize,
-		DPI:     dpi,
+		DPI:     72,
 		Hinting: font.HintingFull,
 	})
 

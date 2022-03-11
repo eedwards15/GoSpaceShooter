@@ -1,7 +1,6 @@
 package scenes
 
 import (
-	"SpaceShooter/assets"
 	"SpaceShooter/src/helpers"
 	"SpaceShooter/src/npcs"
 	"SpaceShooter/src/player"
@@ -16,7 +15,6 @@ import (
 	"golang.org/x/image/font/opentype"
 	"image/color"
 	_ "image/png"
-	"log"
 	"strconv"
 	"time"
 )
@@ -33,7 +31,7 @@ type Level struct {
 	EnemyBullets           []*weapons.Bullet
 	SCENENAME              string
 	fxPlayer               *audio.Player
-	LIFEICONSCALE          float64
+	LifeUiConsole          float64
 	enemySpawner           *npcs.EnemySpawner
 }
 
@@ -46,16 +44,15 @@ var (
 )
 
 func (levelClass *Level) Init() {
-
-	levelClass.enemies = []npcs.IEnemy{}
 	levelClass.SCENENAME = "Level 1"
+	levelClass.enemies = []npcs.IEnemy{}
 	levelClass.playerBullets = []*weapons.Bullet{}
 	levelClass.EnemyBullets = []*weapons.Bullet{}
 
 	SCORE = 0
+
 	systems.MUSICSYSTEM.SetVolume(.50)
-	cX, cY := systems.WINDOWMANAGER.Center()
-	PLAYER = player.NewPLayer(cX, cY)
+	PLAYER = player.NewPLayer(systems.WINDOWMANAGER.CenterX(), systems.WINDOWMANAGER.CenterY())
 	PLAYER.IsDead = false
 
 	soundEffect := systems.ASSETSYSTEM.Assets["Global"].SoundEffects["EnemyExplosion"]
@@ -66,19 +63,13 @@ func (levelClass *Level) Init() {
 	PLAYER.Ship.SelectShip(1, 2)
 
 	levelClass.soundEffectPlayer, _ = audio.CurrentContext().NewPlayer(PLAYER.Ship.FireSound)
-	f, _ := assets.AssetsFileSystem.ReadFile("fonts/arcades/Arcades.ttf")
-	tt, err := opentype.Parse(f)
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	const dpi = 72
-	TITLE_ARCADE_FONT, err = opentype.NewFace(tt, &opentype.FaceOptions{
+	TITLE_ARCADE_FONT, _ = opentype.NewFace(systems.ASSETSYSTEM.Assets["Global"].Fonts["Arcades"], &opentype.FaceOptions{
 		Size:    18,
-		DPI:     dpi,
+		DPI:     72,
 		Hinting: font.HintingFull,
 	})
-	levelClass.LIFEICONSCALE = 50 / PLAYER.Ship.CurrentShipWidth
+	levelClass.LifeUiConsole = 50 / PLAYER.Ship.CurrentShipWidth
 	levelClass.enemySpawner = npcs.NewEnemySpawner()
 }
 
@@ -114,7 +105,7 @@ func (levelClass *Level) Draw(screen *ebiten.Image) {
 
 	for i := 0; i < PLAYER.Life; i++ {
 		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Scale(levelClass.LIFEICONSCALE, levelClass.LIFEICONSCALE)
+		op.GeoM.Scale(levelClass.LifeUiConsole, levelClass.LifeUiConsole)
 		op.GeoM.Translate(float64(50*i)+20, 50)
 		screen.DrawImage(PLAYER.Ship.CurrentShipImage, op)
 	}

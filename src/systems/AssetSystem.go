@@ -11,12 +11,12 @@ var (
 )
 
 type AssetSystem struct {
-	Assets map[string]*definitions.LevelDefinition
+	Assets map[string]*definitions.SceneAssets
 }
 
 func InitAssetSystem() {
 	ASSETSYSTEM = &AssetSystem{}
-	ASSETSYSTEM.Assets = make(map[string]*definitions.LevelDefinition)
+	ASSETSYSTEM.Assets = make(map[string]*definitions.SceneAssets)
 	configValues, _ := helpers.AssetConfigHelper()
 
 	var wg sync.WaitGroup
@@ -25,7 +25,7 @@ func InitAssetSystem() {
 		r := configValues[i]
 		go func(record *definitions.AssetConfig) {
 			defer wg.Done()
-			ASSETSYSTEM.Assets[record.Scene] = definitions.NewLevelDefinition(record)
+			ASSETSYSTEM.Assets[record.Scene] = definitions.NewSceneAssets(record)
 
 		}(r)
 	}
