@@ -123,7 +123,7 @@ func (levelClass *Level) Update() error {
 
 	for e := 0; e < len(levelClass.enemies); e++ {
 		//Check for collision with player.
-		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.enemies[e].GetPosX(), levelClass.enemies[e].GetPosY()) <= 50 {
+		if helpers.DistanceBetween(PLAYER.Xpos, PLAYER.Ypos, levelClass.enemies[e].GetPosX(), levelClass.enemies[e].GetPosY()) <= 50 {
 
 			PLAYER.TakeDamage()
 
@@ -192,7 +192,7 @@ func (levelClass *Level) Update() error {
 	for i := 0; i < len(levelClass.EnemyBullets); i++ {
 		levelClass.EnemyBullets[i].Ypos += 10
 
-		if helpers.DistanceBetween(PLAYER.XPos, PLAYER.YPos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 40 {
+		if helpers.DistanceBetween(PLAYER.Xpos, PLAYER.Ypos, levelClass.EnemyBullets[i].Xpos, levelClass.EnemyBullets[i].Ypos) <= 40 {
 
 			PLAYER.TakeDamage()
 			if PLAYER.IsDead {
@@ -218,26 +218,26 @@ func (levelClass *Level) Update() error {
 	for _, p := range levelClass.keys {
 		_, ok := keyboard.KeyRect(p)
 
-		if p.String() == "A" && (PLAYER.XPos > 0) {
+		if p.String() == "A" && (PLAYER.Xpos > 0) {
 			PLAYER.MoveX(-10)
 		}
 
-		if p.String() == "D" && (PLAYER.XPos+(PLAYER.Ship.CurrentShipWidth) < float64(systems.WINDOWMANAGER.SCREENWIDTH)) {
+		if p.String() == "D" && (PLAYER.Xpos+(PLAYER.Ship.CurrentShipWidth) < float64(systems.WINDOWMANAGER.SCREENWIDTH)) {
 			PLAYER.MoveX(10)
 		}
 
-		if p.String() == "W" && (PLAYER.YPos > 0) {
+		if p.String() == "W" && (PLAYER.Ypos > 0) {
 			PLAYER.MoveY(-10)
 		}
 
-		if p.String() == "S" && ((PLAYER.YPos + PLAYER.Ship.CurrentShipHeight) < float64(systems.WINDOWMANAGER.SCREENHEIGHT)) {
+		if p.String() == "S" && ((PLAYER.Ypos + PLAYER.Ship.CurrentShipHeight) < float64(systems.WINDOWMANAGER.SCREENHEIGHT)) {
 			PLAYER.MoveY(10)
 		}
 
 		if p.String() == "Space" && (time.Now().Sub(levelClass.lastFire).Milliseconds() > PLAYER.Ship.FireRate) {
 			//Look into Command Pattern.
 			bullet := weapons.NewBullet(systems.ASSETSYSTEM.Assets[GOBAL_ASSETS].Images["LaserBullet"])
-			bullet = bullet.SetCoordinates(PLAYER.XPos+(PLAYER.Ship.CurrentShipWidth/2)-(bullet.Width/2), PLAYER.YPos)
+			bullet = bullet.SetCoordinates(PLAYER.Xpos+(PLAYER.Ship.CurrentShipWidth/2)-(bullet.Width/2), PLAYER.Ypos)
 			levelClass.playerBullets = append(levelClass.playerBullets, bullet)
 			levelClass.lastFire = time.Now()
 			levelClass.soundEffectPlayer.SetVolume(1)

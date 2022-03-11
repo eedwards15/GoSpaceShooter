@@ -1,6 +1,7 @@
 package player
 
 import (
+	"SpaceShooter/src/models"
 	"github.com/hajimehoshi/ebiten/v2"
 	"time"
 )
@@ -9,17 +10,16 @@ type Player struct {
 	MaxLife      int
 	Life         int
 	Ship         *Ship
-	XPos         float64
-	YPos         float64
 	IsDead       bool
 	invulnerable time.Time
+	models.Vector2
 }
 
 func NewPLayer(x, y float64) *Player {
 
 	PLAYER := &Player{}
-	PLAYER.XPos = x
-	PLAYER.YPos = y
+	PLAYER.Xpos = x
+	PLAYER.Ypos = y
 	PLAYER.Ship = NewShip()
 	PLAYER.IsDead = false
 	PLAYER.Life = 3
@@ -28,11 +28,11 @@ func NewPLayer(x, y float64) *Player {
 }
 
 func (player *Player) MoveX(x float64) {
-	player.XPos += x
+	player.Xpos += x
 }
 
 func (player *Player) MoveY(y float64) {
-	player.YPos += y
+	player.Ypos += y
 }
 
 func (player *Player) IsInvulnerable() bool {
@@ -66,7 +66,7 @@ func (player *Player) Draw(screen *ebiten.Image) {
 		op.ColorM.Scale(1, 1, 1, 1)
 	}
 
-	op.GeoM.Translate(player.XPos, player.YPos)
+	op.GeoM.Translate(player.Xpos, player.Ypos)
 	screen.DrawImage(player.Ship.CurrentShipImage, op)
 
 }
